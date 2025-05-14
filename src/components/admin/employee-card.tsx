@@ -13,7 +13,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
   description,
 }) => {
   return (
-    <div className="flex rounded-lg shadow-md w-full h-fit border border-gray-700">
+    <div className="flex rounded-lg shadow-md w-full h-fit border border-gray-800">
       {/* Image Placeholder */}
       <div className="w-1/3">
         <img

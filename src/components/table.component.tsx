@@ -1,4 +1,3 @@
-
 import {
   useReactTable,
   getCoreRowModel,
@@ -69,14 +68,14 @@ export function Table<TData>({
         <div className="flex items-center justify-between mt-4">
           <div className="flex gap-2">
             <button
-              className="px-4 py-2 text-sm font-medium text-gray-700 border-gray-700 rounded-md border disabled:cursor-not-allowed "
+              className="px-4 py-2 text-sm font-medium text-gray-700 border-gray-800 rounded-md border disabled:cursor-not-allowed "
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
               Previous
             </button>
             <button
-              className="px-4 py-2 text-sm font-medium text-gray-700 border-gray-700 rounded-md border disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium text-gray-700 border-gray-800 rounded-md border disabled:cursor-not-allowed"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >

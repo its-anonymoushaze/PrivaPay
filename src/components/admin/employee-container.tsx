@@ -1,18 +1,22 @@
 import { useState } from "react";
-import AddEmployeeModal from "../components/employee/add-employee-modal";
-import EmployeeCard from "../components/employee/employee-card";
-import AdminLayout from "../layouts/AdminLayout";
+import AddEmployeeModal from "./add-employee-modal";
+import EmployeeCard from "./employee-card";
 
-const Employee = () => {
+const EmployeeContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <AdminLayout>
-      <div className="space-y-4">
+    <>
+      <div className="space-y-6">
         <div className="flex justify-between w-full">
-          <span>Employee List</span>
+          <div className="flex flex-col gap-1 ">
+            <span className="text-xl font-semibold">Employee List</span>
+            <span className="text-sm font-semibold">
+              Here is the list of all the employee
+            </span>
+          </div>
 
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-orange-500 text-white px-4 h-fit py-2 rounded"
             onClick={() => setIsModalOpen(true)}
           >
             + Add Employee
@@ -45,8 +49,8 @@ const Employee = () => {
         open={isModalOpen}
         close={() => setIsModalOpen(false)}
       />
-    </AdminLayout>
+    </>
   );
 };
 
-export default Employee;
+export default EmployeeContainer;

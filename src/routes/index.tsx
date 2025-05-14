@@ -1,10 +1,8 @@
-import Bridge from "../pages/Bridge";
+import { Navigate, useRoutes } from "react-router-dom";
 import Dashboard from "../pages/dashboard/dashboard";
-import Employee from "../pages/Employee";
 import LandingPage from "../pages/Landing";
 import Login from "../pages/login";
 import NotFound from "../pages/NotFound";
-import { Navigate, useRoutes } from "react-router-dom";
 
 export default function AppRouter() {
   const publicRoutes = [
@@ -13,20 +11,12 @@ export default function AppRouter() {
       element: <LandingPage />,
     },
     {
-      path: "/employee",
-      element: <Employee />,
-    },
-    {
-      path: "/bridge",
-      element: <Bridge />,
-    },
-    {
       path: "/dashboard",
       element: <Dashboard />,
     },
     {
       path: "/login",
-      element: <Login />
+      element: <Login />,
     },
     {
       path: "/404",
