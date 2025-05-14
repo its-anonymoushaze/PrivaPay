@@ -1,6 +1,8 @@
 import Organization from "./admin/organization";
 import { CustomPopover } from "./popover.component";
 import cn from "classnames";
+import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
+import "@demox-labs/aleo-wallet-adapter-reactui/dist/styles.css";
 
 const Header = () => {
   const isWalletConnected = false; // Replace with actual wallet connection logic
@@ -19,7 +21,10 @@ const Header = () => {
             trigger={
               <button className="lg:px-4 lg:py-2 border border-gray-800 rounded-md flex items-center gap-2">
                 <div className={cn("w-2 h-2 rounded-full bg-icon")} />
-                <span className="hidden lg:block">Connect Wallet</span>
+
+                <span className="hidden lg:block">
+                  <WalletMultiButton />
+                </span>
               </button>
             }
           >
@@ -28,7 +33,9 @@ const Header = () => {
         ) : (
           <button className="lg:px-4 lg:py-2 border border-gray-800 rounded-md flex items-center gap-2">
             <div className={cn("w-2 h-2 rounded-full bg-icon")} />
-            <span className="hidden lg:block">Connect Wallet</span>
+            <span className="hidden lg:block">
+              <WalletMultiButton />
+            </span>
           </button>
         )}
         <Organization />
