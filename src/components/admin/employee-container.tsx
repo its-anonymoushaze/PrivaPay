@@ -16,7 +16,7 @@ const EmployeeContainer = () => {
           </div>
 
           <button
-            className="bg-orange-500 text-white px-4 h-fit py-2 rounded"
+            className="border border-orange-500 text-orange-500 bg-orange-500/5 px-4 h-fit py-2 rounded cursor-pointer"
             onClick={() => setIsModalOpen(true)}
           >
             + Add Employee

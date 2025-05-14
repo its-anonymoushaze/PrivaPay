@@ -1,38 +1,20 @@
-import React from 'react'
+import React from "react";
+import FeatureCard from "./feature-card";
 
 const Usecase = () => {
   return (
-    <section id="use-cases" className="py-20 ">
-      <h2 className="text-3xl text-center font-semibold mb-8 text-orange-500">
+    <section className="py-12 px-4">
+      <h2 className="text-3xl font-mono font-bold text-white mb-10">
         Use Cases
       </h2>
-      <div className="max-w-4xl mx-auto space-y-6 text-lg text-gray-300">
-        <div>
-          <h3 className="font-semibold">Global Remote Teams</h3>
-          <p>
-            Confidentially manage international compensation while enabling
-            instant access to funds across borders without revealing sensitive
-            payment information.
-          </p>
-        </div>
-        <div>
-          <h3 className="font-semibold">Confidential Contractor Payments</h3>
-          <p>
-            Pay freelancers and contractors with privacy-preserving transactions
-            that protect rate information while providing verification of
-            payment.
-          </p>
-        </div>
-        <div>
-          <h3 className="font-semibold">Salary Discretion</h3>
-          <p>
-            Maintain confidentiality around compensation structures while still
-            operating on a verifiable blockchain system.
-          </p>
-        </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <FeatureCard />
+        <FeatureCard />
+        <FeatureCard />
       </div>
     </section>
   );
-}
+};
 
-export default Usecase
+export default Usecase;

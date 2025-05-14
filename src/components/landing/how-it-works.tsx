@@ -1,31 +1,20 @@
-import React from 'react'
+import React from "react";
+import FeatureCard from "./feature-card";
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-20 ">
-      <h2 className="text-3xl text-center font-semibold mb-8 text-orange-500">
-        How It Works
+    <section className="py-12 px-4">
+      <h2 className="text-3xl font-mono font-bold text-white mb-10">
+        How does it work?
       </h2>
-      <ol className="max-w-3xl mx-auto space-y-6 text-lg text-gray-300">
-        <li>
-          <strong>Private Organization Setup:</strong> Create your organization
-          with Aleo's privacy controls
-        </li>
-        <li>
-          <strong>Secure Team Management:</strong> Add employees and set
-          salaries with encrypted data
-        </li>
-        <li>
-          <strong>Protected Fund Allocation:</strong> Deposit assets with
-          privacy-preserving transactions
-        </li>
-        <li>
-          <strong>Confidential Withdrawals:</strong> Employees access earnings
-          without exposing financial details
-        </li>
-      </ol>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <FeatureCard />
+        <FeatureCard />
+        <FeatureCard />
+      </div>
     </section>
   );
-}
+};
 
-export default HowItWorks
+export default HowItWorks;

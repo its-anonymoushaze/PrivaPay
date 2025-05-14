@@ -1,22 +1,18 @@
-import React from 'react'
+import React from "react";
 
 const CTA = () => {
   return (
-    <section
-      id="get-started"
-      className="py-20 bg-gradient-to-r from-orange-500 to-orange-600 text-center text-white"
-    >
-      <h2 className="text-3xl font-semibold mb-8">
-        Ready to Transform Your Payroll with Privacy?
+    <section className="py-12 px-4 text-center bg-orange-500">
+      <h2 className="text-2xl font-bold text-white mb-6">
+        Ready to Transform your <span className="text-white">Payroll</span> with{" "}
+        <span className="text-orange-500">Privacy</span>?
       </h2>
-      <a
-        href="#signup"
-        className="bg-white text-orange-600 py-3 px-6 rounded-lg text-xl hover:bg-orange-200"
-      >
-        Get Started with PrivaPay
-      </a>
+
+      <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md">
+        Contact Us For Demo
+      </button>
     </section>
   );
-}
+};
 
-export default CTA
+export default CTA;
