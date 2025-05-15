@@ -1,4 +1,3 @@
-
 import cn from "classnames";
 import React from "react";
 import { convertToCamelCase } from "../utils/convertToCamelCase";
@@ -25,7 +24,7 @@ const Input = ({ label, icon, className, required, ...rest }: InputProps) => {
           id={convertToCamelCase(label ?? "")}
           className={cn(
             className,
-            "bg-transparent w-full focus:outline-none py-2"
+            "bg-transparent w-full focus:outline-none py-2 appearance-none"
           )}
           {...rest}
         />
