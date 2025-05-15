@@ -10,9 +10,6 @@ export const useFetchRecords = () => {
         if (!publicKey) throw new WalletNotConnectedError();
         if (requestRecords) {
             const records = await requestRecords(program);
-            let filteredRecords: any[] = [];
-
-            console.log("Records: " + records);
 
             return records;
         }

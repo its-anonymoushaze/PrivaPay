@@ -32,6 +32,9 @@ importers:
       aleo-adapters:
         specifier: ^1.2.1
         version: 1.2.1(@types/react@19.1.4)(buffer@6.0.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      aleo-hasher-web:
+        specifier: ^0.1.0
+        version: 0.1.0
       axios:
         specifier: ^1.9.0
         version: 1.9.0
@@ -65,6 +68,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.6
         version: 4.1.6
+      zod:
+        specifier: ^3.24.4
+        version: 3.24.4
     devDependencies:
       '@eslint/js':
         specifier: ^9.25.0
@@ -1111,6 +1117,9 @@ packages:
 
   aleo-adapters@1.2.1:
     resolution: {integrity: sha512-eKUXuNgGju/HSnMFMK6o1XP5vh6aM53fY5W/BnwQ2bdPhRXFgW46ZhrZNP9mCsHfkMz94tDD2SUkdYPb0qjGng==}
+
+  aleo-hasher-web@0.1.0:
+    resolution: {integrity: sha512-QGgelljiX++51Kgo+edqD/+YzZwqNTxRFdfIJ5Qr7C3MdwKPCTPDZYiw3RmAt/Tvx9SC0jv3lVBqgYJ82XGfXw==}
 
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
@@ -3263,6 +3272,8 @@ snapshots:
       - react-native
       - supports-color
       - utf-8-validate
+
+  aleo-hasher-web@0.1.0: {}
 
   ansi-styles@4.3.0:
     dependencies:

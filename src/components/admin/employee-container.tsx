@@ -1,9 +1,12 @@
 import { useState } from "react";
 import AddEmployeeModal from "./add-employee-modal";
 import EmployeeCard from "./employee-card";
+import useRecordProvider from "../../providers/record.providers";
 
 const EmployeeContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { employeeRecords } = useRecordProvider();
+  console.log(employeeRecords);
   return (
     <>
       <div className="space-y-6">
