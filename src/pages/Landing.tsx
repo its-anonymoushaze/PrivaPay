@@ -12,6 +12,7 @@ import Hero from "../components/landing/hero";
 import HowItWorks from "../components/landing/how-it-works";
 import Usecase from "../components/landing/usecase";
 import ValueProposition from "../components/landing/value-prop";
+import { PrivaPay } from "../assets/illustrations";
 
 // Placeholder Image URLs
 
@@ -20,11 +21,9 @@ const LandingPage = () => {
     <div className="font-sans  text-white">
       {/* Header */}
       <nav className="flex justify-between items-center py-4 px-6">
-        <div className="flex items-center">
-          <div className="flex items-center mr-4">
-            <div className="bg-orange-500 rounded-full h-6 w-6 flex items-center justify-center text-white font-bold">
-              P
-            </div>
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center ">
+            <img src={PrivaPay} alt="logo" className="w-8 h-8" />
             <span className="ml-2 font-mono font-bold text-white">
               PrivaPay
             </span>
@@ -32,21 +31,6 @@ const LandingPage = () => {
           <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded">
             BETA
           </span>
-        </div>
-
-        <div className="hidden md:flex space-x-6 text-white">
-          <a href="#" className="hover:text-orange-500">
-            Explore
-          </a>
-          <a href="#" className="hover:text-orange-500">
-            Pricing
-          </a>
-          <a href="#" className="hover:text-orange-500">
-            Services
-          </a>
-          <a href="#" className="hover:text-orange-500">
-            Contact
-          </a>
         </div>
 
         <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md flex items-center">
@@ -62,13 +46,11 @@ const LandingPage = () => {
       <HowItWorks />
       <Usecase />
       {/* Footer */}
-      <footer className="py-8 px-6 bg-black">
+      <footer className="py-8 px-6 mt-8">
         <div className="flex flex-col md:flex-row justify-between items-start">
           <div className="mb-6 md:mb-0">
             <div className="flex items-center mb-4">
-              <div className="bg-orange-500 rounded-full h-6 w-6 flex items-center justify-center text-white font-bold">
-                P
-              </div>
+              <img src={PrivaPay} alt="logo" className="w-8 h-8" />
               <span className="ml-2 font-mono font-bold text-white">
                 PrivaPay
               </span>

@@ -3,6 +3,7 @@ import Dashboard from "../pages/dashboard/dashboard";
 import LandingPage from "../pages/Landing";
 import Login from "../pages/login";
 import NotFound from "../pages/NotFound";
+import Bridge from "../pages/Bridge";
 
 export default function AppRouter() {
   const publicRoutes = [
@@ -13,6 +14,10 @@ export default function AppRouter() {
     {
       path: "/dashboard",
       element: <Dashboard />,
+    },
+    {
+      path: "/bridge",
+      element: <Bridge />,
     },
     {
       path: "/login",

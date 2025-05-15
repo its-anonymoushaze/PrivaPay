@@ -1,25 +1,31 @@
 import { ArrowUpRight } from "lucide-react";
+import { useRouter } from "../../routes/hooks/useRouter";
 
 const Hero = () => {
+  const { push } = useRouter();
   return (
     <section className="text-center py-16 px-4">
-      <h1 className="text-4xl md:text-5xl font-mono font-bold text-white mb-6">
-        Private, Programmable
+      <h1 className="text-4xl md:text-5xl font-mono font-bold text-white mb-6 space-y-4">
+        <span>
+          <span className="text-orange-500">Private,</span> Programmable
+        </span>
         <br />
-        Payroll on Aleo Blockchain
+        <span>Payroll on Aleo Blockchain</span>
       </h1>
-      <p className="text-gray-300 italic mb-10 max-w-2xl mx-auto">
-        "The future of confidential payroll management with
+      <p className="text-gray-300 italic mb-10 max-w-2xl text-xl mx-auto">
+        "The future of{" "}
+        <span className="text-orange-500">confidential payroll management</span>{" "}
+        with
         <br />
         zero-knowledge-proof technology"
       </p>
       <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
-        <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md flex items-center justify-center">
+        <button
+          onClick={() => push("/login")}
+          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-md flex items-center justify-center"
+        >
           Create your Payroll Account
           <ArrowUpRight className="ml-1 h-4 w-4" />
-        </button>
-        <button className="border border-gray-600 hover:border-gray-400 text-white px-6 py-3 rounded-md">
-          Schedule a Demo
         </button>
       </div>
     </section>

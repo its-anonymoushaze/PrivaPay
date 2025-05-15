@@ -1,43 +1,36 @@
-import Organization from "./admin/organization";
-import { CustomPopover } from "./popover.component";
-import cn from "classnames";
 import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import "@demox-labs/aleo-wallet-adapter-reactui/dist/styles.css";
+import Organization from "./admin/organization";
+import { PrivaPay } from "../assets/illustrations";
+import { usePathname } from "../routes/hooks";
 
 const Header = () => {
-  const isWalletConnected = false; // Replace with actual wallet connection logic
+  const pathname = usePathname();
   return (
     <header className="flex items-center justify-between py-3 border-b border-gray-800 w-full mx-auto px-40">
-      <h1 className="text-2xl font-medium uppercase">
+      <h1 className="text-xl font-medium">
         <a href={"/"}>
-          Priva<span className="text-orange-500">pay</span>
+          <div className="flex items-center ">
+            <img src={PrivaPay} alt="logo" className="w-8 h-8" />
+            <span className="ml-2 font-mono font-bold text-white">
+              PrivaPay
+            </span>
+          </div>
         </a>
       </h1>
 
       <div className="flex gap-4 items-center">
-        {isWalletConnected ? (
-          <CustomPopover
-            className="flex flex-col gap-2"
-            trigger={
-              <button className="lg:px-4 lg:py-2 border border-gray-800 rounded-md flex items-center gap-2">
-                <div className={cn("w-2 h-2 rounded-full bg-icon")} />
-
-                <span className="hidden lg:block">
-                  <WalletMultiButton />
-                </span>
-              </button>
-            }
-          >
-            hey
-          </CustomPopover>
-        ) : (
-          <button className="lg:px-4 lg:py-2 border border-gray-800 rounded-md flex items-center gap-2">
-            <div className={cn("w-2 h-2 rounded-full bg-icon")} />
-            <span className="hidden lg:block">
-              <WalletMultiButton />
-            </span>
-          </button>
-        )}
+        <div className="flex gap-6">
+          {pathname !== "/dashboard" && (
+            <a href={"/dashboard"} className="hover:text-orange-500">
+              Dashboard
+            </a>
+          )}
+          <a href={"/bridge"} className="hover:text-orange-500">
+            Brigde
+          </a>
+        </div>
+        <WalletMultiButton className="bg-transparent " />
         <Organization />
       </div>
     </header>
