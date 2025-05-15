@@ -2,6 +2,7 @@ import Button from "../button.component";
 import Input from "../input.component";
 import Modal from "../modal.component";
 import { useAddEmployee } from "../../hooks/useAddEmployee";
+import { useState } from "react";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -9,26 +10,41 @@ interface AddEmployeeModalProps {
 }
 
 const AddEmployeeModal = ({ open, close }: AddEmployeeModalProps) => {
+  const [employeeDetails, setEmployeeDetails] = useState({
+    employeeId: "",
+    employeeAddress: "",
+    salary: "",
+    startPeroiod: 0,
+    endPeriod: 0,
+  });
+
   const { addEmployee } = useAddEmployee();
 
   const handleAddEmployee = async () => {
     const companyId = BigInt(1); // Replace with actual value
-    const employeeId = BigInt(2); // Replace with actual value
-    const employeeAddress = "0x1234567890abcdef"; // Replace with actual value
-    const salary = BigInt(1000000); // Replace with actual value
+    const employeeId = BigInt(employeeDetails.employeeId); // Replace with actual value
+    const employeeAddress = employeeDetails.employeeAddress; // Replace with actual value
+    const salary = BigInt(employeeDetails.salary); // Replace with actual value
     const tokenId = BigInt(3); // Replace with actual value
-    const startPeriod = 1; // Replace with actual value
-    const endPeriod = 2; // Replace with actual value
+    const startPeriod = employeeDetails.startPeroiod; // Replace with actual value
+    const endPeriod = employeeDetails.endPeriod; // Replace with actual value
 
-    await addEmployee(
-      companyId,
-      employeeId,
-      employeeAddress,
-      salary,
-      tokenId,
-      startPeriod,
-      endPeriod
-    );
+    try {
+      await addEmployee(
+        companyId,
+        employeeId,
+        employeeAddress,
+        salary,
+        tokenId,
+        startPeriod,
+        endPeriod
+      );
+
+      alert("Employee added successfully");
+      close();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -41,13 +57,61 @@ const AddEmployeeModal = ({ open, close }: AddEmployeeModalProps) => {
     >
       <div>
         <div className="flex flex-col gap-4">
-          <Input label="Employee ID" required />
-          <Input label="Employee Address" required />
-          <Input label="Salary" type="number" required />
-          <Input label="Start Date" type="date" required />
-          <Input label="End Date" type="date" required />
+          <Input
+            label="Employee ID"
+            required
+            onChange={(e) => {
+              setEmployeeDetails({
+                ...employeeDetails,
+                employeeId: e.target.value,
+              });
+            }}
+          />
+          <Input
+            label="Employee Address"
+            required
+            onChange={(e) => {
+              setEmployeeDetails({
+                ...employeeDetails,
+                employeeAddress: e.target.value,
+              });
+            }}
+          />
+          <Input
+            label="Salary"
+            type="number"
+            required
+            onChange={(e) => {
+              setEmployeeDetails({
+                ...employeeDetails,
+                salary: e.target.value,
+              });
+            }}
+          />
+          <Input
+            label="Start Period"
+            type="number"
+            required
+            onChange={(e) => {
+              setEmployeeDetails({
+                ...employeeDetails,
+                startPeroiod: Number(e.target.value),
+              });
+            }}
+          />
+          <Input
+            label="End Period"
+            type="number"
+            required
+            onChange={(e) => {
+              setEmployeeDetails({
+                ...employeeDetails,
+                endPeriod: Number(e.target.value),
+              });
+            }}
+          />
 
-          <Button>Send Application</Button>
+          <Button onClick={handleAddEmployee}>Send Application</Button>
         </div>
       </div>
     </Modal>

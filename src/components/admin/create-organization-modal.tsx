@@ -1,9 +1,9 @@
+import { useState } from "react";
+import { useCompanyRegister } from "../../hooks/useCompanyRegister";
+import { stringToAscii } from "../../utils/stringToAscii";
 import Button from "../button.component";
 import Input from "../input.component";
 import Modal from "../modal.component";
-import { useCompanyRegister } from "../../hooks/useCompanyRegister";
-import { stringToAscii } from "../../utils/stringToAscii";
-import { useState } from "react";
 
 interface CreateOrganizationModalProps {
   open: boolean;
@@ -25,6 +25,10 @@ const CreateOrganizationModal = ({
     const companyName = stringToAscii(organizationDetails.organizationName);
 
     try {
+      if (!companyId || !companyName) {
+        throw new Error("Please fill in all the fields");
+      }
+
       await registerCompany(companyId, companyName);
       alert("Organization created successfully");
       close();
