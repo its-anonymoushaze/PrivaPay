@@ -1,14 +1,20 @@
+import React from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  flexRender,
   type ColumnDef,
+  flexRender,
 } from "@tanstack/react-table";
 
 interface TableProps<TData> {
   data: TData[];
+  isLoading?: boolean;
+  isError?: boolean;
+  error?: string;
+  currentPage?: number;
+  totalPages?: number;
   hidePagination?: boolean;
   columns: ColumnDef<TData>[];
 }
@@ -17,6 +23,10 @@ export function Table<TData>({
   data,
   columns,
   hidePagination,
+  isLoading,
+  currentPage,
+  totalPages,
+  error,
 }: TableProps<TData>) {
   const table = useReactTable({
     data,
@@ -27,16 +37,16 @@ export function Table<TData>({
   });
 
   return (
-    <div>
+    <div className="w-[80vw] h-[70vh]">
       {/* Table */}
-      <table className="min-w-full divide-y divide-gray-900">
+      <table className="min-w-full divide-y divide-gray-700 border border-gray-800  p-6 rounded-2xl shadow-simple text-white">
         <thead className="">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="px-6 py-6 text-left text-xs font-medium text-[#7f8286] uppercase tracking-wider"
                 >
                   {flexRender(
                     header.column.columnDef.header,
@@ -47,13 +57,30 @@ export function Table<TData>({
             </tr>
           ))}
         </thead>
-        <tbody className=" divide-y divide-gray-900">
+        <tbody className=" divide-y divide-gray-800 max-h-[64px]">
+          {isLoading && (
+            <tr>
+              <td colSpan={columns.length} className="text-center py-4">
+                Loading...
+              </td>
+            </tr>
+          )}
+          {error && (
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="text-center py-4 text-red-500"
+              >
+                {error}
+              </td>
+            </tr>
+          )}
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.id} style={{ height: "32px" }}>
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="px-6 py-4 whitespace-nowrap text-sm text-gray-300"
+                  className="px-6 py-4 whitespace-nowrap text-md  h-fit"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
@@ -68,25 +95,24 @@ export function Table<TData>({
         <div className="flex items-center justify-between mt-4">
           <div className="flex gap-2">
             <button
-              className="px-4 py-2 text-sm font-medium text-gray-700 border-gray-800 rounded-md border disabled:cursor-not-allowed "
+              className="px-4 py-2 text-sm font-medium border-gray-800 text-white rounded-md border disabled:cursor-not-allowed "
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
               Previous
             </button>
             <button
-              className="px-4 py-2 text-sm font-medium text-gray-700 border-gray-800 rounded-md border disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium border-gray-800 text-white rounded-md border disabled:cursor-not-allowed"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
               Next
             </button>
           </div>
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-white">
             Page{" "}
             <strong>
-              {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
+              {currentPage} of {totalPages}
             </strong>
           </span>
         </div>
