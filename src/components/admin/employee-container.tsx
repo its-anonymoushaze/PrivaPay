@@ -2,11 +2,12 @@ import { useState } from "react";
 import AddEmployeeModal from "./add-employee-modal";
 import EmployeeCard from "./employee-card";
 import useRecordProvider from "../../providers/record.providers";
+import { leo2js } from "../../lib/aleo";
 
 const EmployeeContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { employeeRecords } = useRecordProvider();
-  console.log(employeeRecords);
+  const { employeeRecordsAdmin } = useRecordProvider();
+  console.log({ employeeRecordsAdmin });
   return (
     <>
       <div className="space-y-6">
@@ -26,26 +27,13 @@ const EmployeeContainer = () => {
           </button>
         </div>
         <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <EmployeeCard
-            name="John Doe"
-            title="Software Engineer"
-            description="Passionate about building scalable applications."
-          />
-          <EmployeeCard
-            name="Jane Smith"
-            title="Product Manager"
-            description="Expert in driving product vision and strategy."
-          />
-          <EmployeeCard
-            name="Alice Johnson"
-            title="UX Designer"
-            description="Focused on creating user-friendly interfaces."
-          />
-          <EmployeeCard
-            name="Bob Brown"
-            title="Data Scientist"
-            description="Skilled in data analysis and machine learning."
-          />
+          {employeeRecordsAdmin.map((item: any) => (
+            <EmployeeCard
+              name={leo2js.field(item.employee_id).toString()}
+              title={leo2js.address(item.employee_address)}
+              description={leo2js.u128(item.amount).toString()}
+            />
+          ))}
         </div>
       </div>
       <AddEmployeeModal

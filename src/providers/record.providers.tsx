@@ -2,7 +2,11 @@ import React, { createContext, useEffect, useState } from "react";
 import { useFetchRecords } from "../hooks/useFetchRecord";
 import { VITE_PRIVAPAY_CONTRACT_NAME } from "../config/env";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
-import { leo2js } from "../lib/aleo";
+import { js2leo, leo2js } from "../lib/aleo";
+import { useAleoContract } from "../hooks/useAleoContract";
+import { parseJSONLikeString } from "../utils/parser";
+import { getEmployeeHash } from "../utils/employeeHash";
+import { vUSDCTokenID } from "../config/token";
 
 interface RecordContext {
   employeeRecords: any;
@@ -46,6 +50,31 @@ export const RecordContextProvider = ({
     bigint | undefined | null
   >();
   const { fetchRecords } = useFetchRecords();
+  const { program } = useAleoContract();
+  const getCompanyData = async (com: any) => {
+    const companyData = await program(VITE_PRIVAPAY_CONTRACT_NAME)
+      .map("registered_company")
+      .get(js2leo.field(leo2js.field(com.data.company_id)));
+    console.log({ companyData });
+    const parsedCompanyData = parseJSONLikeString(companyData);
+    // const parsedJSON = JSON.parse(parsedCompanyData);
+    return parsedCompanyData as any;
+  };
+
+  const getEmployeeData = async (emp: any) => {
+    const employeeHash = await getEmployeeHash(
+      leo2js.field(emp.data.company_id),
+      leo2js.field(emp.data.employee_id),
+      leo2js.address(emp.data.employee_address),
+      vUSDCTokenID
+    );
+    const employeeData = await program(VITE_PRIVAPAY_CONTRACT_NAME)
+      .map("total_claimed")
+      .get(employeeHash);
+    const parsedEmployeeData = parseJSONLikeString(employeeData || "0u128");
+    console.log({ parsedEmployeeData });
+    return parsedEmployeeData as any;
+  };
 
   useEffect(() => {
     const filterRecords = async () => {
@@ -57,14 +86,23 @@ export const RecordContextProvider = ({
         const recordType = leo2js.u8(recordData.record_type);
         if (recordType == 0) {
           setIsAdmin(true);
-          setCompanyRecords((prev) => [...prev, record]);
+          const parsedCompanyData = await getCompanyData(record);
+          setCompanyRecords((prev) => [
+            ...prev,
+            { ...record.data, company_name: parsedCompanyData.company_name },
+          ]);
+          setCurrentOrganization(leo2js.field(record?.data?.company_id));
         } else if (recordType == 1) {
           setEmployeeRecords((prev) => [...prev, record]);
         } else if (recordType == 2) {
-          setEmployeeRecordsAdmin((prev) => [...prev, record]);
+          const parsedEmployeeData = await getEmployeeData(record);
+          setEmployeeRecordsAdmin((prev) => [
+            ...prev,
+            { ...record.data, amount: parsedEmployeeData },
+          ]);
+          //   setEmployeeRecordsAdmin((prev) => [...prev, record]);
         }
       }
-      setCurrentOrganization(leo2js.field(companyRecords[0]?.data?.company_id));
     };
     filterRecords();
   }, [publicKey]);
