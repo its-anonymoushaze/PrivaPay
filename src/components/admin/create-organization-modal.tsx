@@ -3,6 +3,7 @@ import Input from "../input.component";
 import Modal from "../modal.component";
 import { useCompanyRegister } from "../../hooks/useCompanyRegister";
 import { stringToAscii } from "../../utils/stringToAscii";
+import { useState } from "react";
 
 interface CreateOrganizationModalProps {
   open: boolean;
@@ -14,10 +15,22 @@ const CreateOrganizationModal = ({
   close,
 }: CreateOrganizationModalProps) => {
   const { registerCompany } = useCompanyRegister();
+
+  const [organizationDetails, setOrganizationDetails] = useState({
+    organizationId: "",
+    organizationName: "",
+  });
   const handleCreateOrganization = async () => {
-    const companyId = BigInt(1); // Replace with actual value
-    const companyName = stringToAscii("Venture23"); // Replace with actual value
-    await registerCompany(companyId, companyName);
+    const companyId = BigInt(organizationDetails.organizationId);
+    const companyName = stringToAscii(organizationDetails.organizationName);
+
+    try {
+      await registerCompany(companyId, companyName);
+      alert("Organization created successfully");
+      close();
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <Modal
@@ -28,10 +41,28 @@ const CreateOrganizationModal = ({
       onClose={close}
     >
       <div className="flex flex-col gap-4">
-        <Input label="Organization ID" required />
-        <Input label="Organization Name" required />
+        <Input
+          label="Organization ID"
+          required
+          onChange={(e) => {
+            setOrganizationDetails({
+              ...organizationDetails,
+              organizationId: e.target.value,
+            });
+          }}
+        />
+        <Input
+          label="Organization Name"
+          required
+          onChange={(e) => {
+            setOrganizationDetails({
+              ...organizationDetails,
+              organizationName: e.target.value,
+            });
+          }}
+        />
 
-        <Button>Create Organization</Button>
+        <Button onClick={handleCreateOrganization}>Create Organization</Button>
       </div>
     </Modal>
   );
