@@ -1,6 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 
 import { Table } from "../table.component";
+import useRecordProvider from "../../providers/record.providers";
 
 interface Transaction {
   organizationId: string;
@@ -56,6 +57,8 @@ const data: Transaction[] = [
 ];
 
 const UserOrganizationTable = () => {
+  const { employeeRecords } = useRecordProvider();
+  console.log(employeeRecords);
   const isLoading = false;
   return (
     <Table

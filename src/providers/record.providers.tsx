@@ -9,6 +9,8 @@ interface RecordContext {
   companyRecords: any;
   employeeRecordsAdmin: any;
   isAdmin: boolean;
+  currentOrganization: bigint | null | undefined;
+  setCurrentOrganization: (value: bigint | null | undefined) => void;
   setEmployeeRecords: (value: any) => void;
   setCompanyRecords: (value: any) => void;
   setEmployeeRecordsAdmin: (value: any) => void;
@@ -20,6 +22,8 @@ const initialState: RecordContext = {
   companyRecords: [],
   employeeRecordsAdmin: [],
   isAdmin: false,
+  currentOrganization: null,
+  setCurrentOrganization: () => {},
   setEmployeeRecords: () => {},
   setCompanyRecords: () => {},
   setEmployeeRecordsAdmin: () => {},
@@ -38,6 +42,9 @@ export const RecordContextProvider = ({
   const [companyRecords, setCompanyRecords] = useState<any[]>([]);
   const [employeeRecordsAdmin, setEmployeeRecordsAdmin] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [currentOrganization, setCurrentOrganization] = useState<
+    bigint | undefined | null
+  >();
   const { fetchRecords } = useFetchRecords();
 
   useEffect(() => {
@@ -57,6 +64,7 @@ export const RecordContextProvider = ({
           setEmployeeRecordsAdmin((prev) => [...prev, record]);
         }
       }
+      setCurrentOrganization(leo2js.field(companyRecords[0]?.data?.company_id));
     };
     filterRecords();
   }, [publicKey]);
@@ -67,6 +75,8 @@ export const RecordContextProvider = ({
         companyRecords,
         employeeRecordsAdmin,
         isAdmin,
+        currentOrganization,
+        setCurrentOrganization,
         setIsAdmin,
         setEmployeeRecords,
         setCompanyRecords,

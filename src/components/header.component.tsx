@@ -3,9 +3,11 @@ import "@demox-labs/aleo-wallet-adapter-reactui/dist/styles.css";
 import Organization from "./admin/organization";
 import { PrivaPay } from "../assets/illustrations";
 import { usePathname } from "../routes/hooks";
+import useRecordProvider from "../providers/record.providers";
 
 const Header = () => {
   const pathname = usePathname();
+  const { isAdmin } = useRecordProvider();
   return (
     <header className="flex items-center justify-between py-3 border-b border-gray-800 w-full mx-auto px-40">
       <h1 className="text-xl font-medium">
@@ -26,12 +28,14 @@ const Header = () => {
               Dashboard
             </a>
           )}
-          <a href={"/bridge"} className="hover:text-orange-500">
-            Brigde
-          </a>
+          {isAdmin && (
+            <a href={"/bridge"} className="hover:text-orange-500">
+              Brigde
+            </a>
+          )}
         </div>
         <WalletMultiButton className="bg-transparent " />
-        <Organization />
+        {isAdmin && <Organization />}
       </div>
     </header>
   );
