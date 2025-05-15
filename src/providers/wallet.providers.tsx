@@ -11,7 +11,7 @@ import {
   FoxWalletAdapter,
   SoterWalletAdapter,
 } from "aleo-adapters";
-import { VITE_NETWORK_TYPE } from "../config/env";
+import { VITE_NETWORK_TYPE, VITE_PRIVAPAY_CONTRACT_NAME } from "../config/env";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const wallets = useMemo(
@@ -21,16 +21,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       }),
       new PuzzleWalletAdapter({
         programIdPermissions: {
-          [WalletAdapterNetwork.MainnetBeta]: [
-            "dApp_1.aleo",
-            "dApp_1_import.aleo",
-            "dApp_1_import_2.aleo",
-          ],
-          [WalletAdapterNetwork.TestnetBeta]: [
-            "dApp_1_test.aleo",
-            "dApp_1_test_import.aleo",
-            "dApp_1_test_import_2.aleo",
-          ],
+          [WalletAdapterNetwork.MainnetBeta]: [VITE_PRIVAPAY_CONTRACT_NAME],
+          [WalletAdapterNetwork.TestnetBeta]: [VITE_PRIVAPAY_CONTRACT_NAME],
         },
         appName: "Aleo app",
         appDescription: "A privacy-focused DeFi app",
@@ -49,7 +41,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WalletProvider
       wallets={wallets}
-      decryptPermission={DecryptPermission.UponRequest}
+      decryptPermission={DecryptPermission.OnChainHistory}
       network={
         VITE_NETWORK_TYPE == "mainnet"
           ? WalletAdapterNetwork.MainnetBeta

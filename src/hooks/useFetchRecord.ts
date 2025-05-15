@@ -10,10 +10,10 @@ export const useFetchRecords = () => {
         if (!publicKey) throw new WalletNotConnectedError();
         if (requestRecords) {
             const records = await requestRecords(program);
-
+            console.log("Fetched records:", records);
             return records;
         }
-    }, []);
+    }, [requestRecords, publicKey]);
 
     return { fetchRecords }
 };

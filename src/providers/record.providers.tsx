@@ -1,6 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useFetchRecords } from "../hooks/useFetchRecord";
 import { VITE_PRIVAPAY_CONTRACT_NAME } from "../config/env";
+import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import { leo2js } from "../lib/aleo";
 
 interface RecordContext {
   employeeRecords: any;
@@ -31,6 +33,7 @@ export const RecordContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { publicKey } = useWallet();
   const [employeeRecords, setEmployeeRecords] = useState<any[]>([]);
   const [companyRecords, setCompanyRecords] = useState<any[]>([]);
   const [employeeRecordsAdmin, setEmployeeRecordsAdmin] = useState<any[]>([]);
@@ -40,21 +43,23 @@ export const RecordContextProvider = ({
   useEffect(() => {
     const filterRecords = async () => {
       const records = await fetchRecords(VITE_PRIVAPAY_CONTRACT_NAME);
+      console.log("Fetched records:", records);
 
       for (const record of records) {
         const recordData = record.data;
-        if (recordData.record_type == 0) {
+        const recordType = leo2js.u8(recordData.record_type);
+        if (recordType == 0) {
           setIsAdmin(true);
           setCompanyRecords((prev) => [...prev, record]);
-        } else if (recordData.record_type == 1) {
+        } else if (recordType == 1) {
           setEmployeeRecords((prev) => [...prev, record]);
-        } else if (recordData.record_type == 2) {
+        } else if (recordType == 2) {
           setEmployeeRecordsAdmin((prev) => [...prev, record]);
         }
       }
     };
     filterRecords();
-  }, []);
+  }, [publicKey]);
   return (
     <RecordContext.Provider
       value={{

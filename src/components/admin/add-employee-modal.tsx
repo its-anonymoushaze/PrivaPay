@@ -3,6 +3,7 @@ import Input from "../input.component";
 import Modal from "../modal.component";
 import { useAddEmployee } from "../../hooks/useAddEmployee";
 import { useState } from "react";
+import { vUSDCTokenID } from "../../config/token";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -25,7 +26,7 @@ const AddEmployeeModal = ({ open, close }: AddEmployeeModalProps) => {
     const employeeId = BigInt(employeeDetails.employeeId); // Replace with actual value
     const employeeAddress = employeeDetails.employeeAddress; // Replace with actual value
     const salary = BigInt(employeeDetails.salary); // Replace with actual value
-    const tokenId = BigInt(3); // Replace with actual value
+    const tokenId = vUSDCTokenID; // Replace with actual value
     const startPeriod = employeeDetails.startPeroiod; // Replace with actual value
     const endPeriod = employeeDetails.endPeriod; // Replace with actual value
 
