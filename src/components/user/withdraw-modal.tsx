@@ -22,12 +22,12 @@ const WithdrawModal = ({ open, close, record }: WithdrawModalProps) => {
       onClose={close}
     >
       <div className="flex flex-col gap-4">
-        <div>
+        <div className="flex justify-between items-center">
           <span>
             Max Withdrawable Amount:{" "}
             <span className="text-orange-500">1000</span>
           </span>
-          <button className="text-orange-500 border border-orange-500 bg-orange-500/5">
+          <button className="text-orange-500 border border-orange-500 bg-orange-500/5 rounded-md px-2 py-1 text-[12px]">
             Max
           </button>
         </div>
