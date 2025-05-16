@@ -46,6 +46,7 @@ export const RecordContextProvider = ({
   const [companyRecords, setCompanyRecords] = useState<any[]>([]);
   const [employeeRecordsAdmin, setEmployeeRecordsAdmin] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [employeeData, setEmployeeData] = useState<any[]>([]);
   const [currentOrganization, setCurrentOrganization] = useState<
     bigint | undefined | null
   >();
@@ -76,6 +77,20 @@ export const RecordContextProvider = ({
     return parsedEmployeeData as any;
   };
 
+  const getEmployeeDataUser = async (emp: any) => {
+    const employeeHash = await getEmployeeHash(
+      leo2js.field(emp.data.company_id),
+      leo2js.field(emp.data.employee_id),
+      leo2js.address(emp.data.employee_address),
+      vUSDCTokenID
+    );
+    const employeeData = await program(VITE_PRIVAPAY_CONTRACT_NAME)
+      .map("latest_claim")
+      .get(employeeHash);
+    const parsedEmployeeData = parseJSONLikeString(employeeData || "0u32");
+    return parsedEmployeeData as any;
+  };
+
   useEffect(() => {
     const filterRecords = async () => {
       const records = await fetchRecords(VITE_PRIVAPAY_CONTRACT_NAME);
@@ -93,6 +108,11 @@ export const RecordContextProvider = ({
           ]);
           setCurrentOrganization(leo2js.field(record?.data?.company_id));
         } else if (recordType == 1) {
+          const parsedEmployeeData = await getEmployeeDataUser(record);
+          setEmployeeData((prev) => [
+            ...prev,
+            { ...record.data, amount: parsedEmployeeData },
+          ]);
           setEmployeeRecords((prev) => [...prev, record]);
         } else if (recordType == 2) {
           const parsedEmployeeData = await getEmployeeData(record);

@@ -2,6 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 
 import { Table } from "../table.component";
 import useRecordProvider from "../../providers/record.providers";
+import { leo2js } from "../../lib/aleo";
 
 interface Transaction {
   organizationId: string;
@@ -10,26 +11,47 @@ interface Transaction {
   claimedAmount: number;
 }
 
-const transactionColumns: ColumnDef<Transaction>[] = [
+const transactionColumns: ColumnDef<any>[] = [
   {
-    accessorKey: "organizationId",
+    accessorKey: "data.company_id",
     header: "Organization ID",
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-2">
+          {leo2js.field(row.original.data.company_id)}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "organizationName",
     header: "Organization Name",
   },
   {
-    accessorKey: "amount",
+    accessorKey: "data.amount",
     header: "Amount",
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-2">
+          {leo2js.u128(row.original.data.amount)}
+        </div>
+      );
+    },
   },
   {
-    accessorKey: "claimedAmount",
+    accessorKey: "data.claimable_salary",
     header: "Claimed Amount",
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-2">
+          {leo2js.u128(row.original.data.claimable_salary)}
+        </div>
+      );
+    },
   },
   {
     header: "Action",
-    cell: () => {
+    cell: ({ row }) => {
       return (
         <div className="flex gap-2">
           <button className="border border-orange-500 text-orange-500 bg-orange-500/10 px-4 py-2 rounded-md cursor-pointer">
@@ -62,7 +84,7 @@ const UserOrganizationTable = () => {
   const isLoading = false;
   return (
     <Table
-      data={data}
+      data={employeeRecords}
       columns={transactionColumns}
       isLoading={isLoading}
       totalPages={1}
