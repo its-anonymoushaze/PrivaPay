@@ -4,15 +4,15 @@ import { useRouter } from "../../routes/hooks/useRouter";
 const Hero = () => {
   const { push } = useRouter();
   return (
-    <section className="text-center py-16 px-4">
-      <h1 className="text-4xl md:text-5xl font-mono font-bold text-white mb-6 space-y-4">
+    <section className="text-center py-16 px-4 h-screen flex flex-col items-center gap-4 justify-center">
+      <h1 className="text-4xl md:text-8xl font-bold text-white mb-6 space-y-4">
         <span>
           <span className="text-orange-500">Private,</span> Programmable
         </span>
         <br />
         <span>Payroll on Aleo Blockchain</span>
       </h1>
-      <p className="text-gray-300 italic mb-10 max-w-2xl text-xl mx-auto">
+      <p className="text-gray-300 italic mb-10 text-4xl mx-auto">
         "The future of{" "}
         <span className="text-orange-500">confidential payroll management</span>{" "}
         with
