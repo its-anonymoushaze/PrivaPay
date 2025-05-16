@@ -2,38 +2,40 @@ import { Navigate, useRoutes } from "react-router-dom";
 import Dashboard from "../pages/dashboard/dashboard";
 import LandingPage from "../pages/Landing";
 import Login from "../pages/login";
-import NotFound from "../pages/NotFound";
 import Bridge from "../pages/Bridge";
+import { useWallet as useAleoWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import NotFound from "../pages/NotFound";
 
 export default function AppRouter() {
+  const { connected: isWalletConnected } = useAleoWallet();
   const publicRoutes = [
     {
       path: "/",
       element: <LandingPage />,
     },
     {
-      path: "/dashboard",
-      element: <Dashboard />,
-    },
-    {
-      path: "/bridge",
-      element: <Bridge />,
-    },
-    {
       path: "/login",
       element: <Login />,
     },
     {
-      path: "/404",
+      path: "/*",
       element: <NotFound />,
-    },
-    {
-      path: "*",
-      element: <Navigate to="/404" replace />,
     },
   ];
 
-  const routes = useRoutes([...publicRoutes]);
+  const privateRoutes = [
+    {
+      path: "/dashboard",
+      element: isWalletConnected ? <Dashboard /> : <Navigate to="/login" />,
+    },
+
+    {
+      path: "/bridge",
+      element: isWalletConnected ? <Bridge /> : <Navigate to="/login" />,
+    },
+  ];
+
+  const routes = useRoutes([...publicRoutes, ...privateRoutes]);
 
   return routes;
 }

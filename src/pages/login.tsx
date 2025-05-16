@@ -1,7 +1,18 @@
+import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import { CatAstro } from "../assets/illustrations";
-import Button from "../components/button.component";
+import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import { useEffect } from "react";
+import { useRouter } from "../routes/hooks";
 
 const Login = () => {
+  const { connected } = useWallet();
+  const { push } = useRouter();
+
+  useEffect(() => {
+    if (connected) {
+      push("/dashboard");
+    }
+  }, [connected]);
   return (
     <div className="flex items-center justify-center gap-16 w-screen h-screen">
       <div>
@@ -17,12 +28,20 @@ const Login = () => {
             </h2>
           </div>
           <p className=" text-gray-600 text-center">
-            Experience the power of confidential compensation management with
-            PrivaPay.{" "}
+            Quickly connect your wallet and experience the power of confidential
+            compensation management with PrivaPay.{" "}
           </p>
         </div>
 
-        <Button>Connect Wallet</Button>
+        <WalletMultiButton
+          style={{
+            backgroundColor: "#FF7A05",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        />
       </div>
     </div>
   );

@@ -1,7 +1,5 @@
-
 import Button from "../components/button.component";
 import { useRouter } from "../routes/hooks";
-
 
 export default function NotFound() {
   const router = useRouter();
@@ -19,12 +17,8 @@ export default function NotFound() {
         moved.
       </p>
       <div className="mt-8 flex justify-center gap-2">
-        <Button onClick={() => router.back()} >
-          Go back
-        </Button>
-        <Button onClick={() => router.push("/")} >
-          Back to Home
-        </Button>
+        <Button onClick={() => router.back()}>Go back</Button>
+        <Button onClick={() => router.push("/")}>Back to Home</Button>
       </div>
     </div>
   );

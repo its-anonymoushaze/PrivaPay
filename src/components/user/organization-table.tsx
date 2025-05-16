@@ -63,21 +63,6 @@ const transactionColumns: ColumnDef<any>[] = [
   },
 ];
 
-const data: Transaction[] = [
-  {
-    organizationId: "123",
-    organizationName: "Organization A",
-    amount: 1000,
-    claimedAmount: 500,
-  },
-  {
-    organizationId: "456",
-    organizationName: "Organization B",
-    amount: 2000,
-    claimedAmount: 1500,
-  },
-];
-
 const UserOrganizationTable = () => {
   const { employeeRecords } = useRecordProvider();
   console.log(employeeRecords);
@@ -88,7 +73,11 @@ const UserOrganizationTable = () => {
       columns={transactionColumns}
       isLoading={isLoading}
       totalPages={1}
-      error={data.length === 0 ? "No joined organization found" : undefined}
+      error={
+        employeeRecords.length === 0
+          ? "No joined organization found"
+          : undefined
+      }
       currentPage={1}
     />
   );

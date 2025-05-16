@@ -69,7 +69,7 @@ export function Table<TData>({
             <tr>
               <td
                 colSpan={columns.length}
-                className="text-center py-4 text-red-500"
+                className="text-center py-4 text-gray-600"
               >
                 {error}
               </td>

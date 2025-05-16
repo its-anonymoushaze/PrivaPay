@@ -34,7 +34,17 @@ const Header = () => {
             </a>
           )}
         </div>
-        <WalletMultiButton className="bg-transparent " />
+        <WalletMultiButton
+          style={{
+            border: "1px solid #1E2839",
+            backgroundColor: "transparent",
+            borderRadius: "8px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        />
         {isAdmin && <Organization />}
       </div>
     </header>
