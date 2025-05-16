@@ -7,14 +7,20 @@ import { leo2js } from "../../lib/aleo";
 import { useMemo } from "react";
 
 const Organization = () => {
-  const { companyRecords, currentOrganization, setCurrentOrganization } =
-    useRecordProvider();
+  const {
+    companyRecords,
+    currentOrganization,
+    employeeRecords,
+    setCurrentOrganization,
+  } = useRecordProvider();
 
   const currentOrganizationName = useMemo(() => {
-    return companyRecords.find(
-      (item: any) => leo2js.field(item.company_id) === currentOrganization
-    )?.company_name;
-  }, [companyRecords, currentOrganization]);
+    return (
+      [...companyRecords].find(
+        (item: any) => leo2js.field(item.company_id) === currentOrganization
+      )?.company_name || "5u128"
+    );
+  }, [companyRecords, currentOrganization, employeeRecords]);
   console.log({ currentOrganizationName });
   const path = window.location.pathname;
 

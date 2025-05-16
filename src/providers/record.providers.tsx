@@ -1,12 +1,13 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useFetchRecords } from "../hooks/useFetchRecord";
-import { VITE_PRIVAPAY_CONTRACT_NAME } from "../config/env";
+import { VITE_ALEO_BASE_URL, VITE_PRIVAPAY_CONTRACT_NAME } from "../config/env";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { js2leo, leo2js } from "../lib/aleo";
 import { useAleoContract } from "../hooks/useAleoContract";
 import { parseJSONLikeString } from "../utils/parser";
 import { getEmployeeHash } from "../utils/employeeHash";
 import { vUSDCTokenID } from "../config/token";
+import axios from "axios";
 
 interface RecordContext {
   employeeRecords: any;
@@ -41,7 +42,7 @@ export const RecordContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { publicKey } = useWallet();
+  const { publicKey, connected } = useWallet();
   const [employeeRecords, setEmployeeRecords] = useState<any[]>([]);
   const [companyRecords, setCompanyRecords] = useState<any[]>([]);
   const [employeeRecordsAdmin, setEmployeeRecordsAdmin] = useState<any[]>([]);
@@ -52,10 +53,10 @@ export const RecordContextProvider = ({
   >();
   const { fetchRecords } = useFetchRecords();
   const { program } = useAleoContract();
-  const getCompanyData = async (com: any) => {
+  const getCompanyData = async (company_id: any) => {
     const companyData = await program(VITE_PRIVAPAY_CONTRACT_NAME)
       .map("registered_company")
-      .get(js2leo.field(leo2js.field(com.data.company_id)));
+      .get(js2leo.field(leo2js.field(company_id)));
     console.log({ companyData });
     const parsedCompanyData = parseJSONLikeString(companyData);
     // const parsedJSON = JSON.parse(parsedCompanyData);
@@ -81,51 +82,102 @@ export const RecordContextProvider = ({
     const employeeHash = await getEmployeeHash(
       leo2js.field(emp.data.company_id),
       leo2js.field(emp.data.employee_id),
-      leo2js.address(emp.data.employee_address),
+      leo2js.address(emp.data.owner),
       vUSDCTokenID
     );
-    const employeeData = await program(VITE_PRIVAPAY_CONTRACT_NAME)
+    const last_claim_height = await program(VITE_PRIVAPAY_CONTRACT_NAME)
       .map("latest_claim")
       .get(employeeHash);
-    const parsedEmployeeData = parseJSONLikeString(employeeData || "0u32");
-    return parsedEmployeeData as any;
+    const total_claimed = await program(VITE_PRIVAPAY_CONTRACT_NAME)
+      .map("total_claimed")
+      .get(employeeHash);
+    const total_claimed_amount = parseJSONLikeString(total_claimed || "0u128");
+    const parsedEmployeeData = parseJSONLikeString(
+      last_claim_height || emp.data.start_date
+    );
+    return { total_claimed_amount, last_claimed: parsedEmployeeData as any };
+  };
+
+  const getLatestHeight = async () => {
+    const latest_height = await axios.get(
+      VITE_ALEO_BASE_URL + "/testnet/latest/height"
+    );
+    const parsedHeight = latest_height.data;
+    return parsedHeight as any;
   };
 
   useEffect(() => {
     const filterRecords = async () => {
-      const records = await fetchRecords(VITE_PRIVAPAY_CONTRACT_NAME);
-      console.log("Fetched records:", records);
+      try {
+        const records = await fetchRecords(VITE_PRIVAPAY_CONTRACT_NAME);
+        console.log("Fetched records:", records);
 
-      for (const record of records) {
-        const recordData = record.data;
-        const recordType = leo2js.u8(recordData.record_type);
-        if (recordType == 0) {
-          setIsAdmin(true);
-          const parsedCompanyData = await getCompanyData(record);
-          setCompanyRecords((prev) => [
-            ...prev,
-            { ...record.data, company_name: parsedCompanyData.company_name },
-          ]);
-          setCurrentOrganization(leo2js.field(record?.data?.company_id));
-        } else if (recordType == 1) {
-          const parsedEmployeeData = await getEmployeeDataUser(record);
-          setEmployeeData((prev) => [
-            ...prev,
-            { ...record.data, amount: parsedEmployeeData },
-          ]);
-          setEmployeeRecords((prev) => [...prev, record]);
-        } else if (recordType == 2) {
-          const parsedEmployeeData = await getEmployeeData(record);
-          setEmployeeRecordsAdmin((prev) => [
-            ...prev,
-            { ...record.data, amount: parsedEmployeeData },
-          ]);
-          //   setEmployeeRecordsAdmin((prev) => [...prev, record]);
+        const latest_height = await getLatestHeight();
+
+        for (const record of records) {
+          const recordData = record.data;
+          const recordType = leo2js.u8(recordData.record_type);
+          if (recordType == 0) {
+            setIsAdmin(true);
+            const parsedCompanyData = await getCompanyData(
+              record.data.company_id
+            );
+            setCompanyRecords((prev) => [
+              ...prev,
+              { ...record.data, company_name: parsedCompanyData.company_name },
+            ]);
+            setCurrentOrganization(leo2js.field(record?.data?.company_id));
+          } else if (recordType == 1) {
+            const parsedEmployeeData = await getEmployeeDataUser(record);
+            const parsedCompanyData = await getCompanyData(
+              record.data.company_id
+            );
+            setEmployeeData((prev) => [
+              ...prev,
+              {
+                ...record.data,
+                last_claim: parsedEmployeeData.last_claimed,
+                current_height: latest_height,
+                total_claimed_amount: parsedEmployeeData.total_claimed_amount,
+              },
+            ]);
+            setEmployeeRecords((prev) => [
+              ...prev,
+              {
+                record,
+                last_claim: parsedEmployeeData.last_claimed,
+                current_height: latest_height,
+                total_claimed_amount: parsedEmployeeData.total_claimed_amount,
+                companyName: parsedCompanyData.company_name,
+              },
+            ]);
+          } else if (recordType == 2) {
+            const parsedEmployeeData = await getEmployeeData(record);
+            setEmployeeRecordsAdmin((prev) => [
+              ...prev,
+              { ...record.data, amount: parsedEmployeeData },
+            ]);
+            //   setEmployeeRecordsAdmin((prev) => [...prev, record]);
+          }
         }
+        console.log({ employeeData });
+      } catch (error) {
+        console.error("Error fetching records:", error);
       }
     };
     filterRecords();
   }, [publicKey]);
+
+  useEffect(() => {
+    if (!connected) {
+      setEmployeeRecords([]);
+      setCompanyRecords([]);
+      setEmployeeRecordsAdmin([]);
+      setEmployeeData([]);
+      setIsAdmin(false);
+      setCurrentOrganization(null);
+    }
+  }, [connected]);
   return (
     <RecordContext.Provider
       value={{

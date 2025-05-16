@@ -5,6 +5,8 @@ import useRecordProvider from "../../providers/record.providers";
 const Dashboard = () => {
   const { isAdmin } = useRecordProvider();
 
+  console.log("isAdmin", isAdmin);
+
   return isAdmin ? <AdminDashboard /> : <UserDashboard />;
 };
 
