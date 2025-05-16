@@ -3,12 +3,10 @@ import { PrivaPay } from "../assets/illustrations";
 import AleoAdvantage from "../components/landing/aleo-advantage";
 import CTA from "../components/landing/cta";
 import Feature from "../components/landing/features";
-import Hero from "../components/landing/hero";
 import HowItWorks from "../components/landing/how-it-works";
-import Navbar from "../components/landing/navbar";
+import CustomParticleAnimation from "../components/landing/particles";
 import Usecase from "../components/landing/usecase";
 import ValueProposition from "../components/landing/value-prop";
-import CustomParticleAnimation from "../components/landing/particles";
 
 // Placeholder Image URLs
 
