@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Modal from "../modal.component";
 import Input from "../input.component";
 import Button from "../button.component";
+import { leo2js } from "../../lib/aleo";
+import { withdrawableAmountCalculator } from "../../utils/withdrawableAmount";
+import { useWithdrawSalary } from "../../hooks/useWithdrawSalary";
 
 interface WithdrawModalProps {
   open: boolean;
@@ -11,7 +14,22 @@ interface WithdrawModalProps {
 
 const WithdrawModal = ({ open, close, record }: WithdrawModalProps) => {
   const [inputAmount, setInputAmount] = React.useState("");
-  const handleWithdrawFunds = async () => {};
+  const { withdrawSalary } = useWithdrawSalary();
+  const withdrawableAmount = useMemo(() => {
+    if (!record) return 0;
+    return withdrawableAmountCalculator(
+      leo2js.u128(record.record.data.amount),
+      leo2js.u32(record.record.data.start_date),
+      leo2js.u32(record.last_claim),
+      leo2js.u32(record.record.data.end_date),
+      record.current_height
+    );
+  }, [record]); // Replace with actual logic to calculate withdrawable amount
+  const handleWithdrawFunds = async () => {
+    await withdrawSalary(record.record, BigInt(inputAmount));
+    alert("Withdraw request submitted successfully");
+    close();
+  };
   console.log({ record });
   return (
     <Modal
@@ -25,7 +43,7 @@ const WithdrawModal = ({ open, close, record }: WithdrawModalProps) => {
         <div className="flex justify-between items-center">
           <span>
             Max Withdrawable Amount:{" "}
-            <span className="text-orange-500">1000</span>
+            <span className="text-orange-500">{withdrawableAmount}</span>
           </span>
           <button className="text-orange-500 border border-orange-500 bg-orange-500/5 rounded-md px-2 py-1 text-[12px]">
             Max
