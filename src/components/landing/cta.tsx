@@ -1,5 +1,3 @@
-import React from "react";
-
 const CTA = () => {
   return (
     <section className="py-20 px-4 text-center  mx-auto bg-gradient-to-r from-transparent via-orange-500/80  to-transparent rounded-md my-20">
