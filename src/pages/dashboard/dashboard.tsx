@@ -7,7 +7,9 @@ const Dashboard = () => {
 
   console.log("isAdmin", isAdmin);
 
-  return isAdmin ? <AdminDashboard /> : <UserDashboard />;
+  return (
+    <div className="">{isAdmin ? <AdminDashboard /> : <UserDashboard />}</div>
+  );
 };
 
 export default Dashboard;

@@ -5,7 +5,7 @@ import AdminLayout from "../../layouts/AdminLayout";
 const UserDashboard = () => {
   return (
     <AdminLayout>
-      <div className="space-y-10">
+      <div className="space-y-10 p-8">
         <div className="flex justify-between gap-6 w-full">
           <InfoCard
             title="Total Organization Joined"

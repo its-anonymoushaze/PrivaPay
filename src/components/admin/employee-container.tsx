@@ -1,8 +1,7 @@
 import { useState } from "react";
-import AddEmployeeModal from "./add-employee-modal";
-import EmployeeCard from "./employee-card";
 import useRecordProvider from "../../providers/record.providers";
-import { leo2js } from "../../lib/aleo";
+import AddEmployeeModal from "./add-employee-modal";
+import EmployeeTable from "./employee-table";
 
 const EmployeeContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,15 +25,10 @@ const EmployeeContainer = () => {
             + Add Employee
           </button>
         </div>
-        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {employeeRecordsAdmin.map((item: any) => (
-            <EmployeeCard
-              name={leo2js.field(item.employee_id).toString()}
-              title={leo2js.address(item.employee_address)}
-              description={leo2js.u128(item.amount).toString()}
-            />
-          ))}
-        </div>
+        <EmployeeTable
+          employeeRecords={employeeRecordsAdmin}
+          isLoading={false}
+        />
       </div>
       <AddEmployeeModal
         open={isModalOpen}

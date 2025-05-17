@@ -5,12 +5,15 @@ const Hero = () => {
   const { push } = useRouter();
   return (
     <section className="text-center py-16 px-4 h-screen flex flex-col items-center gap-4 justify-center">
-      <h1 className="text-4xl md:text-8xl font-bold text-white mb-6 space-y-4">
+      <h1 className="text-4xl md:text-8xl font-bold text-white mb-6 space-y-4 text-balance">
         <span>
           <span className="text-orange-500">Private,</span> Programmable
         </span>
         <br />
-        <span>Payroll on Aleo Blockchain</span>
+        <span>
+          <span className="text-orange-500">Payroll & DAO voting</span> <br />
+          on Aleo Blockchain
+        </span>
       </h1>
       <p className="text-gray-300 italic mb-10 text-4xl mx-auto">
         "The future of{" "}
