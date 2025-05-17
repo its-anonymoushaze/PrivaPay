@@ -13,7 +13,7 @@ const EmployeeContainer = () => {
         <div className="flex justify-between w-full">
           <div className="flex flex-col gap-1 ">
             <span className="text-xl font-semibold">Employee List</span>
-            <span className="text-sm font-semibold">
+            <span className="text-sm text-gray-500">
               Here is the list of all the employee
             </span>
           </div>

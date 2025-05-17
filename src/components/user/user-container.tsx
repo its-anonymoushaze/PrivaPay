@@ -9,8 +9,8 @@ const UserContainer = () => {
             <span className="text-xl font-semibold">
               Organizations You are involved
             </span>
-            <span className="text-sm font-semibold">
-              Here is the list of all the employee
+            <span className="text-sm text-gray-500">
+              Here is the list of all the organizations you are involved in
             </span>
           </div>
         </div>
