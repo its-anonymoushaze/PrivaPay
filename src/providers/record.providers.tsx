@@ -82,7 +82,7 @@ export const RecordContextProvider = ({
     const employeeHash = await getEmployeeHash(
       leo2js.field(emp.data.company_id),
       leo2js.field(emp.data.employee_id),
-      leo2js.address(emp.data.owner),
+      leo2js.address(emp.owner || emp.data.owner),
       vUSDCTokenID
     );
     const last_claim_height = await program(VITE_PRIVAPAY_CONTRACT_NAME)
