@@ -1,6 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 import { useFetchRecords } from "../hooks/useFetchRecord";
-import { VITE_ALEO_BASE_URL, VITE_PRIVAPAY_CONTRACT_NAME } from "../config/env";
+import {
+  VITE_ALEO_BASE_URL,
+  VITE_ANS_URL,
+  VITE_PRIVAPAY_CONTRACT_NAME,
+} from "../config/env";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { js2leo, leo2js } from "../lib/aleo";
 import { useAleoContract } from "../hooks/useAleoContract";
@@ -26,7 +30,7 @@ const initialState: RecordContext = {
   employeeRecords: [],
   companyRecords: [],
   employeeRecordsAdmin: [],
-  isAdmin: false,
+  isAdmin: true,
   currentOrganization: null,
   setCurrentOrganization: () => {},
   setEmployeeRecords: () => {},
@@ -46,7 +50,7 @@ export const RecordContextProvider = ({
   const [employeeRecords, setEmployeeRecords] = useState<any[]>([]);
   const [companyRecords, setCompanyRecords] = useState<any[]>([]);
   const [employeeRecordsAdmin, setEmployeeRecordsAdmin] = useState<any[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
   const [employeeData, setEmployeeData] = useState<any[]>([]);
   const [currentOrganization, setCurrentOrganization] = useState<
     bigint | undefined | null
@@ -63,11 +67,17 @@ export const RecordContextProvider = ({
     return parsedCompanyData as any;
   };
 
+  // const getAnsNameAndAddressFromField= async (employee_name_field: bigint) => {
+  //   const employeeAndName=await fetch(`${VITE_ANS_URL}/${js2leo.field(employee_name_field)}`);
+  //   const employeeAndNameParsed=await employeeAndName.json();
+  //   const employeeName=employeeAndNameParsed.name;
+  // }
+
   const getEmployeeData = async (emp: any) => {
     const employeeHash = await getEmployeeHash(
       leo2js.field(emp.data.company_id),
       leo2js.field(emp.data.employee_id),
-      leo2js.address(emp.data.employee_address),
+      leo2js.address(emp.data.employee_name_field),
       vUSDCTokenID
     );
     const employeeData = await program(VITE_PRIVAPAY_CONTRACT_NAME)
@@ -174,7 +184,7 @@ export const RecordContextProvider = ({
       setCompanyRecords([]);
       setEmployeeRecordsAdmin([]);
       setEmployeeData([]);
-      setIsAdmin(false);
+      setIsAdmin(true);
       setCurrentOrganization(null);
     }
   }, [connected]);

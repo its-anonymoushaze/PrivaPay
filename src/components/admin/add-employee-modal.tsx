@@ -13,6 +13,7 @@ interface AddEmployeeModalProps {
 const AddEmployeeModal = ({ open, close }: AddEmployeeModalProps) => {
   const [employeeDetails, setEmployeeDetails] = useState({
     employeeId: "",
+    employeeName: "",
     employeeAddress: "",
     salary: "",
     startPeroiod: 0,
@@ -29,6 +30,7 @@ const AddEmployeeModal = ({ open, close }: AddEmployeeModalProps) => {
     const tokenId = vUSDCTokenID; // Replace with actual value
     const startPeriod = employeeDetails.startPeroiod; // Replace with actual value
     const endPeriod = employeeDetails.endPeriod; // Replace with actual value
+    const employeeName = employeeDetails.employeeName; // Replace with actual value
 
     try {
       await addEmployee(
@@ -38,7 +40,8 @@ const AddEmployeeModal = ({ open, close }: AddEmployeeModalProps) => {
         salary,
         tokenId,
         startPeriod,
-        endPeriod
+        endPeriod,
+        employeeName
       );
 
       alert("Employee added successfully");
@@ -65,6 +68,17 @@ const AddEmployeeModal = ({ open, close }: AddEmployeeModalProps) => {
               setEmployeeDetails({
                 ...employeeDetails,
                 employeeId: e.target.value,
+              });
+            }}
+          />
+          <Input
+            label="Employee Name"
+            type="string"
+            required
+            onChange={(e) => {
+              setEmployeeDetails({
+                ...employeeDetails,
+                employeeName: e.target.value,
               });
             }}
           />

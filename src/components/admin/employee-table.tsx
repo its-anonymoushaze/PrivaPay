@@ -1,5 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Table } from "../table.component";
+import { leo2js } from "../../lib/aleo";
 
 interface EmployeeTableProps {
   employeeRecords: any[];
@@ -8,20 +9,48 @@ interface EmployeeTableProps {
 
 const employeeColumns: ColumnDef<any>[] = [
   {
-    accessorKey: "data.employee_id",
+    accessorKey: "employee_id",
     header: "Employee ID",
+    cell: ({ row }) => {
+      return (
+        <span className="text-sm font-semibold">
+          {leo2js.field(row.original.employee_id)}
+        </span>
+      );
+    },
   },
   {
-    accessorKey: "data.company_id",
+    accessorKey: "company_id",
     header: "Organization ID",
+    cell: ({ row }) => {
+      return (
+        <span className="text-sm font-semibold">
+          {leo2js.field(row.original.company_id)}
+        </span>
+      );
+    },
   },
   {
-    accessorKey: "data.company_id",
-    header: "Organization ID",
+    accessorKey: "amount",
+    header: "Salary",
+    cell: ({ row }) => {
+      return (
+        <span className="text-sm font-semibold">
+          {leo2js.u128(row.original.amount)}
+        </span>
+      );
+    },
   },
   {
-    accessorKey: "data.company_id",
-    header: "Organization ID",
+    accessorKey: "employee_address",
+    header: "Employee Address",
+    cell: ({ row }) => {
+      return (
+        <span className="text-sm font-semibold">
+          {leo2js.address(row.original.employee_address)}
+        </span>
+      );
+    },
   },
 ];
 

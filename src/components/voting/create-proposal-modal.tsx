@@ -5,6 +5,9 @@ import Modal from "../modal.component";
 import Select from "../select.component";
 import Textarea from "../textarea.component";
 import { getPreSignedURL, pinata } from "../../utils/pinata";
+import useRecordProvider from "../../providers/record.providers";
+import { asciiToString } from "../../utils/stringToAscii";
+import { leo2js } from "../../lib/aleo";
 
 interface CreateProposalModalProps {
   open: boolean;
@@ -18,6 +21,8 @@ const CreateProposalModal = ({ open, close }: CreateProposalModalProps) => {
     title: "",
     description: "",
   });
+
+  const { companyRecords } = useRecordProvider();
 
   const [uploadStatus, setUploadStatus] = useState("");
   const [link, setLink] = useState("");
@@ -69,10 +74,10 @@ const CreateProposalModal = ({ open, close }: CreateProposalModalProps) => {
               organizationId: e.value,
             });
           }}
-          options={[
-            { label: "org1", value: "1" },
-            { label: "org2", value: "2" },
-          ]}
+          options={companyRecords.map((company: any) => ({
+            label: asciiToString(leo2js.u128(company.company_name)),
+            value: leo2js.field(company.company_id),
+          }))}
         />
         <Input
           label="Title"
