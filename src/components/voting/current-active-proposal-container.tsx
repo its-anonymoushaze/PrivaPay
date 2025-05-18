@@ -1,6 +1,10 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import VoteComponent from "./voting-card";
+import { leo2js } from "../../lib/aleo";
+import { useDaoVoting } from "../../hooks/useDaoVoting";
+import useRecordProvider from "../../providers/record.providers";
+import { toast } from "sonner";
 
 interface CurrentActiveProposalContainerProps {
   proposals: any[];
@@ -12,6 +16,8 @@ const CurrentActiveProposalContainer = ({
   packetsPerPage = 1,
 }: CurrentActiveProposalContainerProps) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const { voteProposal } = useDaoVoting();
+  const { votingRecords } = useRecordProvider();
 
   // Calculate total pages
   const totalPages = Math.max(1, Math.ceil(proposals.length / packetsPerPage));
@@ -21,6 +27,22 @@ const CurrentActiveProposalContainer = ({
   const indexOfFirstPacket = indexOfLastPacket - packetsPerPage;
   const currentPackets = proposals.slice(indexOfFirstPacket, indexOfLastPacket);
 
+  const handleVote = async (proposal: any, acceptance: boolean) => {
+    console.log("Proposal", proposal);
+    console.log("Acceptance", acceptance);
+    try {
+      await voteProposal(
+        leo2js.u32(proposal.id),
+        leo2js.field(proposal.company_id),
+        votingRecords[0],
+        acceptance
+      );
+      toast.success("Vote transaction initiated successfully");
+    } catch (error) {
+      console.error("Error voting on proposal:", error);
+      toast.error("Error voting on proposal");
+    }
+  };
   // Handle pagination
   const goToPreviousPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -56,20 +78,28 @@ const CurrentActiveProposalContainer = ({
           No Active Proposals
         </div>
       ) : (
-        currentPackets.map((packet) => (
+        currentPackets.map((proposal) => (
           <VoteComponent
-            key={packet.id}
-            title={packet.title}
-            description={packet.description}
-            proposer={packet.proposer}
-            status={packet.status}
-            ends={packet.ends}
-            votesFor={packet.votesFor}
-            votesAgainst={packet.votesAgainst}
-            voteDistributionPercent={packet.voteDistributionPercent}
-            votingPowerAvailable={packet.votingPowerAvailable}
-            onVoteFor={() => alert("Voted For")}
-            onVoteAgainst={() => alert("Voted Against")}
+            key={leo2js.u32(proposal.id)}
+            proposal={proposal}
+            title={proposal.data}
+            description={proposal.data}
+            proposer={proposal.proposer}
+            status={"Active"}
+            ends={leo2js.u32(proposal.time_limit).toString()}
+            votesFor={Number(proposal.yes_hash_count)}
+            votesAgainst={Number(proposal.no_hash_count)}
+            voteDistributionPercent={
+              (Number(proposal.yes_hash_count) /
+                (Number(proposal.yes_hash_count) +
+                  Number(proposal.no_hash_count))) *
+              100
+            }
+            votingPowerAvailable={Number(
+              leo2js.u128(votingRecords[0].data.amount)
+            )}
+            onVoteFor={(prop) => handleVote(prop, true)}
+            onVoteAgainst={(prop) => handleVote(prop, false)}
           />
         ))
       )}

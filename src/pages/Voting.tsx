@@ -18,22 +18,6 @@ const Voting = () => {
 
   console.log("Current Active Proposal", currentActiveProposal);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = await pinata.gateways.public.convert(
-        "bafkreigm3y3jbky22lyhrmuk7qeuxqcqo3gst42uvxklbx3cs4xg4j6g3y"
-      );
-      const { data } = await pinata.gateways.public.get(
-        "bafkreigm3y3jbky22lyhrmuk7qeuxqcqo3gst42uvxklbx3cs4xg4j6g3y"
-      );
-
-      console.log(url);
-
-      console.log("Data:", data);
-    };
-    fetchData();
-  }, []);
-
   return (
     <AdminLayout>
       <div className="space-y-10 p-8">

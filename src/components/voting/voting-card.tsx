@@ -1,6 +1,7 @@
 import React from "react";
 
 interface VoteComponentProps {
+  proposal: any;
   title: string;
   description: string;
   proposer: string;
@@ -10,12 +11,13 @@ interface VoteComponentProps {
   votesAgainst: number;
   voteDistributionPercent: number;
   votingPowerAvailable: number;
-  onVoteFor: () => void;
-  onVoteAgainst: () => void;
+  onVoteFor: (proposal: any) => void;
+  onVoteAgainst: (proposal: any) => void;
 }
 
 const VoteComponent: React.FC<VoteComponentProps> = ({
   title,
+  proposal,
   description,
   proposer,
   status,
@@ -56,11 +58,11 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
         <div className="flex justify-around font-bold mb-5">
           <div className="text-green-600">
             👍 For
-            <div>{(votesFor / 1_000_000).toFixed(2)}M</div>
+            <div>{votesFor}</div>
           </div>
           <div className="text-red-600">
             👎 Against
-            <div>{(votesAgainst / 1_000_000).toFixed(2)}M</div>
+            <div>{votesAgainst}</div>
           </div>
         </div>
         <div className="mb-3">
@@ -78,23 +80,26 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
         <div>
           <strong className="block mb-1">Cast Your Vote</strong>
           <div className="text-xs mb-3">
-            You have {votingPowerAvailable.toLocaleString()} voting power
-            available
+            You have {votingPowerAvailable} voting power available
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={onVoteFor}
-              className="flex-1 bg-green-700 hover:bg-green-800 text-white py-2 rounded font-semibold flex justify-center items-center gap-2"
-            >
-              Vote For
-            </button>
-            <button
-              onClick={onVoteAgainst}
-              className="flex-1 bg-red-700 hover:bg-red-800 text-white py-2 rounded font-semibold flex justify-center items-center gap-2"
-            >
-              Vote Against
-            </button>
-          </div>
+          {proposal.votedByUser ? (
+            "you have already voted"
+          ) : (
+            <div className="flex gap-3">
+              <button
+                onClick={() => onVoteFor(proposal)}
+                className="flex-1 bg-green-700 hover:bg-green-800 text-white py-2 rounded font-semibold flex justify-center items-center gap-2"
+              >
+                Vote For
+              </button>
+              <button
+                onClick={() => onVoteAgainst(proposal)}
+                className="flex-1 bg-red-700 hover:bg-red-800 text-white py-2 rounded font-semibold flex justify-center items-center gap-2"
+              >
+                Vote Against
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -102,3 +107,40 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
 };
 
 export default VoteComponent;
+
+// admin
+// :
+// "aleo1wfaqpfc57m0wxmr9l6r8a5g95c0cthe54shzmcyu6wf6tqvady9syt27xt"
+// company_id
+// :
+// "1field"
+// company_name
+// :
+// "5206530950243041280u128"
+// data
+// :
+// "Title: Leave me alone\nDescription: I want leave"
+// detail_hash
+// :
+// (2) ['5341748004139901813278443370079249265657993891619923866090155842657164456471field', '661159771935999158161296255053641652739378562971529356815231512395field']
+// id
+// :
+// "1u32"
+// no_hash_count
+// :
+// 0n
+// proposer
+// :
+// "aleo19rvznap09ngdjvgjgydyy7g2gt5ga8ky4pj8yxk48600mpdy6g9s7etzvp"
+// status
+// :
+// "0u8"
+// time_limit
+// :
+// "8000000u32"
+// votedByUser
+// :
+// false
+// yes_hash_count
+// :
+// 0n
