@@ -1,0 +1,9 @@
+export const {
+    VITE_NETWORK_TYPE,
+    VITE_PRIVAPAY_CONTRACT_NAME,
+    VITE_ALEO_BASE_URL,
+    VITE_GATEWAY_URL,
+    VITE_JWT_SECRET,
+    VITE_DAO_CONTRACT_NAME,
+    VITE_ANS_URL
+} = import.meta.env;
