@@ -1,4 +1,4 @@
-import { CreditCard, Shield, Users } from "lucide-react";
+import { CreditCard, Shield, Users, Vote } from "lucide-react";
 import FeatureCard from "./feature-card";
 
 const featuresData = [
@@ -32,6 +32,16 @@ const featuresData = [
     ],
     icon: <CreditCard size={32} className="text-orange-500" />,
   },
+  {
+    title: "Decentralized Voting System",
+    features: [
+      "Employees can vote on proposals without revealing their identities",
+      "Zero-knowledge proofs ensure vote validity without exposing choices",
+      "Private ballots maintain confidentiality in decision-making",
+      "Experience a fair and transparent voting process",
+    ],
+    icon: <Vote size={32} className="text-orange-500" />,
+  },
 ];
 
 const Feature = () => {
@@ -42,7 +52,7 @@ const Feature = () => {
           Key Features
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {featuresData.map((feature, index) => (
             <FeatureCard
               title={feature.title}

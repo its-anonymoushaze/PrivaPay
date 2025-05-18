@@ -1,5 +1,4 @@
 import { PrivaPay } from "../../assets/illustrations";
-import { ArrowUpRight } from "lucide-react";
 
 const Navbar = () => {
   return (
@@ -13,11 +12,6 @@ const Navbar = () => {
           BETA
         </span>
       </div>
-
-      <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md flex items-center">
-        Sign Up Free
-        <ArrowUpRight className="ml-1 h-4 w-4" />
-      </button>
     </nav>
   );
 };

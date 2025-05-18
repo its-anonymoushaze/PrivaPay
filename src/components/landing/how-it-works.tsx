@@ -1,4 +1,4 @@
-import { Building2, Users, Wallet, EyeOff } from "lucide-react";
+import { Building2, Users, Wallet, EyeOff, Vote } from "lucide-react";
 
 const orgFeatures = [
   {
@@ -20,6 +20,11 @@ const orgFeatures = [
     title: "Confidential Withdrawals",
     description: "Employees access earnings without exposing financial details",
     icon: <EyeOff size={32} />,
+  },
+  {
+    title: "Private Voting System",
+    description: "Employees vote on proposals without revealing identities",
+    icon: <Vote size={32} />,
   },
 ];
 

@@ -2,16 +2,16 @@ import { type ColumnDef } from "@tanstack/react-table";
 
 import { useState } from "react";
 import { leo2js } from "../../lib/aleo";
-import useRecordProvider from "../../providers/record.providers";
 import { asciiToString } from "../../utils/stringToAscii";
 import { withdrawableAmountCalculator } from "../../utils/withdrawableAmount";
 import { Table } from "../table.component";
 import WithdrawModal from "../user/withdraw-modal";
+import useProposalProvider from "../../providers/proposal.providers";
+import { truncate } from "../../utils/formatAddress";
 
 const ProposalTable = () => {
-  const { employeeRecords } = useRecordProvider();
+  const { proposalList } = useProposalProvider();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(employeeRecords);
 
   const [selectedRecord, setSelectedRecord] = useState(null);
 
@@ -27,14 +27,10 @@ const ProposalTable = () => {
 
   const transactionColumns: ColumnDef<any>[] = [
     {
-      accessorKey: "data.company_id",
-      header: "Organization ID",
+      accessorKey: "data.id",
+      header: "Proposal ID",
       cell: ({ row }) => {
-        return (
-          <div className="flex gap-2">
-            {leo2js.field(row.original.record.data.company_id)}
-          </div>
-        );
+        return <div className="flex gap-2">{leo2js.u32(row.original.id)}</div>;
       },
     },
     {
@@ -43,61 +39,61 @@ const ProposalTable = () => {
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            {asciiToString(leo2js.u128(row.original.companyName))}
+            {asciiToString(leo2js.u128(row.original.company_name))}
           </div>
         );
       },
     },
     {
-      accessorKey: "data.amount",
-      header: "Amount",
+      accessorKey: "data.title",
+      header: "Proposal Title",
+      cell: ({ row }) => {
+        return <div className="flex gap-2">{row.original.data}</div>;
+      },
+    },
+    {
+      accessorKey: "data.time_limit",
+      header: "Valid Till Block Height",
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            {leo2js.u128(row.original.record.data.amount)}
+            {leo2js.u32(row.original.time_limit)}
           </div>
         );
       },
     },
     {
-      accessorKey: "data.claimed_salary",
-      header: "Claimed Amount",
+      accessorKey: "data.status",
+      header: "Status",
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            {leo2js.u128(row.original.record.data.claimable_salary)}
+            {leo2js.u8(row.original.status) === 0 ? "Active" : "Inactive"}
           </div>
         );
       },
     },
     {
-      accessorKey: "data.claimable_salary",
-      header: "Current Claimable Amount",
+      accessorKey: "data.yes_hash_count",
+      header: "Votes For",
       cell: ({ row }) => {
-        return (
-          <div className="flex gap-2">
-            {withdrawableAmountCalculator(
-              leo2js.u128(row.original.record.data.amount),
-              leo2js.u32(row.original.record.data.start_date),
-              leo2js.u32(row.original.last_claim),
-              leo2js.u32(row.original.record.data.end_date),
-              row.original.current_height
-            )}
-          </div>
-        );
+        return <div className="flex gap-2">{row.original.yes_hash_count}</div>;
       },
     },
     {
-      header: "Action",
+      accessorKey: "data.no_hash_count",
+      header: "Votes Against",
+      cell: ({ row }) => {
+        return <div className="flex gap-2">{row.original.no_hash_count}</div>;
+      },
+    },
+    {
+      accessorKey: "data.proposer",
+      header: "Proposer",
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            <button
-              onClick={() => openModal(row.original)}
-              className="border border-orange-500 text-orange-500 bg-orange-500/10 px-4 py-2 rounded-md cursor-pointer"
-            >
-              Claim amount
-            </button>
+            {truncate(leo2js.address(row.original.proposer))}
           </div>
         );
       },
@@ -108,15 +104,11 @@ const ProposalTable = () => {
   return (
     <>
       <Table
-        data={employeeRecords}
+        data={proposalList}
         columns={transactionColumns}
         isLoading={isLoading}
         totalPages={1}
-        error={
-          employeeRecords.length === 0
-            ? "No joined organization found"
-            : undefined
-        }
+        error={proposalList.length === 0 ? "No proposals found" : undefined}
         currentPage={1}
       />
       <WithdrawModal

@@ -1,49 +1,27 @@
-import React, { useEffect } from "react";
-import AdminLayout from "../layouts/AdminLayout";
+import React, { useEffect, useMemo } from "react";
 import CreateProposalModal from "../components/voting/create-proposal-modal";
-import VoteComponent from "../components/voting/voting-card";
+import CurrentActiveProposalContainer from "../components/voting/current-active-proposal-container";
 import ProposalTable from "../components/voting/proposal-table";
+import AdminLayout from "../layouts/AdminLayout";
+import useProposalProvider from "../providers/proposal.providers";
 import { pinata } from "../utils/pinata";
 
 const Voting = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const { proposalList } = useProposalProvider();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = await pinata.gateways.public.convert(
-        "bafkreigm3y3jbky22lyhrmuk7qeuxqcqo3gst42uvxklbx3cs4xg4j6g3y"
-      );
-      const { data } = await pinata.gateways.public.get(
-        "bafkreigm3y3jbky22lyhrmuk7qeuxqcqo3gst42uvxklbx3cs4xg4j6g3y"
-      );
+  const currentActiveProposal = useMemo(() => {
+    return proposalList.filter((proposal) => {
+      return proposal.status === "0u8";
+    });
+  }, [proposalList]);
 
-      console.log(url);
-
-      console.log("Data:", data);
-    };
-    fetchData();
-  }, []);
+  console.log("Current Active Proposal", currentActiveProposal);
 
   return (
     <AdminLayout>
       <div className="space-y-10 p-8">
-        <div className="flex flex-col gap-4">
-          <div className="text-xl font-semibold">Current Active Proposal</div>
-          <VoteComponent
-            title="Increase Developer Fund by 5%"
-            description="Allocate an additional 5% of treasury to the developer grants program to accelerate platform development."
-            proposer="0x7a2C...F3b9"
-            status="Active"
-            ends="5/19/2025, 3:24:27 PM"
-            votesFor={2350000}
-            votesAgainst={1260000}
-            voteDistributionPercent={65}
-            votingPowerAvailable={57000}
-            onVoteFor={() => alert("Voted For")}
-            onVoteAgainst={() => alert("Voted Against")}
-          />
-        </div>
-
+        <CurrentActiveProposalContainer proposals={currentActiveProposal} />
         <div className="flex justify-between w-full">
           <div className="flex flex-col gap-1 ">
             <span className="text-xl font-semibold">Proposal List</span>
