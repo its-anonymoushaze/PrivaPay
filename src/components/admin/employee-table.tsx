@@ -1,6 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Table } from "../table.component";
 import { leo2js } from "../../lib/aleo";
+import { convertTokenAmountToDisplay } from "../../utils/tokenAmountFormatter";
+import { vUSDCDecimal } from "../../config/token";
 
 interface EmployeeTableProps {
   employeeRecords: any[];
@@ -36,18 +38,21 @@ const employeeColumns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-sm font-semibold">
-          {leo2js.u128(row.original.amount)}
+          {convertTokenAmountToDisplay(
+            leo2js.u128(row.original.amount),
+            vUSDCDecimal
+          )}
         </span>
       );
     },
   },
   {
     accessorKey: "employee_address",
-    header: "Employee Address",
+    header: "Employee ANS Name",
     cell: ({ row }) => {
       return (
         <span className="text-sm font-semibold">
-          {leo2js.address(row.original.employee_address)}
+          {row.original.employeeName}
         </span>
       );
     },

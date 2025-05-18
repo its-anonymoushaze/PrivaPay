@@ -30,7 +30,7 @@ const initialState: RecordContext = {
   employeeRecords: [],
   companyRecords: [],
   employeeRecordsAdmin: [],
-  isAdmin: true,
+  isAdmin: false,
   currentOrganization: null,
   setCurrentOrganization: () => {},
   setEmployeeRecords: () => {},
@@ -50,7 +50,7 @@ export const RecordContextProvider = ({
   const [employeeRecords, setEmployeeRecords] = useState<any[]>([]);
   const [companyRecords, setCompanyRecords] = useState<any[]>([]);
   const [employeeRecordsAdmin, setEmployeeRecordsAdmin] = useState<any[]>([]);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [employeeData, setEmployeeData] = useState<any[]>([]);
   const [currentOrganization, setCurrentOrganization] = useState<
     bigint | undefined | null
@@ -73,26 +73,38 @@ export const RecordContextProvider = ({
   //   const employeeName=employeeAndNameParsed.name;
   // }
 
+  const getEmployeeNameWithNameField = async (employee_name_field: bigint) => {
+    const employeeName = await fetch(
+      `${VITE_ANS_URL}/${js2leo.field(employee_name_field)}`
+    );
+    const employeeNameParsed = await employeeName.json();
+    const employeeNameField = employeeNameParsed.name;
+    return employeeNameField;
+  };
+
   const getEmployeeData = async (emp: any) => {
     const employeeHash = await getEmployeeHash(
       leo2js.field(emp.data.company_id),
       leo2js.field(emp.data.employee_id),
-      leo2js.address(emp.data.employee_name_field),
+      leo2js.field(emp.data.employee_name_field),
       vUSDCTokenID
     );
     const employeeData = await program(VITE_PRIVAPAY_CONTRACT_NAME)
       .map("total_claimed")
       .get(employeeHash);
-    const parsedEmployeeData = parseJSONLikeString(employeeData || "0u128");
-    console.log({ parsedEmployeeData });
-    return parsedEmployeeData as any;
+    const total_claimed = parseJSONLikeString(employeeData || "0u128");
+    console.log({ total_claimed });
+    const employeeName = await getEmployeeNameWithNameField(
+      leo2js.field(emp.data.employee_name_field)
+    );
+    return { total_claimed_amount: total_claimed as any, employeeName };
   };
 
   const getEmployeeDataUser = async (emp: any) => {
     const employeeHash = await getEmployeeHash(
       leo2js.field(emp.data.company_id),
       leo2js.field(emp.data.employee_id),
-      leo2js.address(emp.owner || emp.data.owner),
+      leo2js.field(emp.data.employee_name_field),
       vUSDCTokenID
     );
     const last_claim_height = await program(VITE_PRIVAPAY_CONTRACT_NAME)
@@ -105,7 +117,14 @@ export const RecordContextProvider = ({
     const parsedEmployeeData = parseJSONLikeString(
       last_claim_height || emp.data.start_date
     );
-    return { total_claimed_amount, last_claimed: parsedEmployeeData as any };
+    const employeeName = await getEmployeeNameWithNameField(
+      leo2js.field(emp.data.employee_name_field)
+    );
+    return {
+      total_claimed_amount,
+      last_claimed: parsedEmployeeData as any,
+      employeeName,
+    };
   };
 
   const getLatestHeight = async () => {
@@ -125,6 +144,7 @@ export const RecordContextProvider = ({
         const latest_height = await getLatestHeight();
 
         for (const record of records) {
+          if (record.spent) continue;
           const recordData = record.data;
           const recordType = leo2js.u8(recordData.record_type);
           if (recordType == 0) {
@@ -159,13 +179,18 @@ export const RecordContextProvider = ({
                 current_height: latest_height,
                 total_claimed_amount: parsedEmployeeData.total_claimed_amount,
                 companyName: parsedCompanyData.company_name,
+                employeeName: parsedEmployeeData.employeeName,
               },
             ]);
           } else if (recordType == 2) {
             const parsedEmployeeData = await getEmployeeData(record);
             setEmployeeRecordsAdmin((prev) => [
               ...prev,
-              { ...record.data, amount: parsedEmployeeData },
+              {
+                ...record.data,
+                total_claimed: parsedEmployeeData.total_claimed_amount,
+                employeeName: parsedEmployeeData.employeeName,
+              },
             ]);
             //   setEmployeeRecordsAdmin((prev) => [...prev, record]);
           }
@@ -184,7 +209,7 @@ export const RecordContextProvider = ({
       setCompanyRecords([]);
       setEmployeeRecordsAdmin([]);
       setEmployeeData([]);
-      setIsAdmin(true);
+      setIsAdmin(false);
       setCurrentOrganization(null);
     }
   }, [connected]);

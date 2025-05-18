@@ -7,6 +7,8 @@ import { asciiToString } from "../../utils/stringToAscii";
 import { withdrawableAmountCalculator } from "../../utils/withdrawableAmount";
 import { Table } from "../table.component";
 import WithdrawModal from "./withdraw-modal";
+import { convertTokenAmountToDisplay } from "../../utils/tokenAmountFormatter";
+import { vUSDCDecimal } from "../../config/token";
 
 const UserOrganizationTable = () => {
   const { employeeRecords } = useRecordProvider();
@@ -49,12 +51,33 @@ const UserOrganizationTable = () => {
       },
     },
     {
+      accessorKey: "data.ans_name",
+      header: "Employee ANS Name",
+      cell: ({ row }) => {
+        return <div className="flex gap-2">{row.original.employeeName}</div>;
+      },
+    },
+    // {
+    //   accessorKey: "data.employee_name",
+    //   header: "Employee Name",
+    //   cell: ({ row }) => {
+    //     return (
+    //       <div className="flex gap-2">
+    //         {asciiToString(leo2js.u128(row.original.employeeName))}
+    //       </div>
+    //     );
+    //   },
+    // },
+    {
       accessorKey: "data.amount",
       header: "Amount",
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            {leo2js.u128(row.original.record.data.amount)}
+            {convertTokenAmountToDisplay(
+              leo2js.u128(row.original.record.data.amount),
+              vUSDCDecimal
+            )}
           </div>
         );
       },
@@ -65,7 +88,10 @@ const UserOrganizationTable = () => {
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            {leo2js.u128(row.original.record.data.claimable_salary)}
+            {convertTokenAmountToDisplay(
+              leo2js.u128(row.original.total_claimed_amount),
+              vUSDCDecimal
+            )}
           </div>
         );
       },
@@ -76,12 +102,15 @@ const UserOrganizationTable = () => {
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            {withdrawableAmountCalculator(
-              leo2js.u128(row.original.record.data.amount),
-              leo2js.u32(row.original.record.data.start_date),
-              leo2js.u32(row.original.last_claim),
-              leo2js.u32(row.original.record.data.end_date),
-              row.original.current_height
+            {convertTokenAmountToDisplay(
+              withdrawableAmountCalculator(
+                leo2js.u128(row.original.record.data.amount),
+                leo2js.u32(row.original.record.data.start_date),
+                leo2js.u32(row.original.last_claim),
+                leo2js.u32(row.original.record.data.end_date),
+                row.original.current_height
+              ),
+              vUSDCDecimal
             )}
           </div>
         );

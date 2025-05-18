@@ -8,6 +8,8 @@ import { getPreSignedURL, pinata } from "../../utils/pinata";
 import useRecordProvider from "../../providers/record.providers";
 import { asciiToString } from "../../utils/stringToAscii";
 import { leo2js } from "../../lib/aleo";
+import { useDaoVoting } from "../../hooks/useDaoVoting";
+import { encodeToFWithQuotient } from "../../utils/encodeDecode";
 
 interface CreateProposalModalProps {
   open: boolean;
@@ -22,7 +24,9 @@ const CreateProposalModal = ({ open, close }: CreateProposalModalProps) => {
     description: "",
   });
 
-  const { companyRecords } = useRecordProvider();
+  const { createProposal } = useDaoVoting();
+
+  const { companyRecords, currentOrganization } = useRecordProvider();
 
   const [uploadStatus, setUploadStatus] = useState("");
   const [link, setLink] = useState("");
@@ -47,6 +51,15 @@ const CreateProposalModal = ({ open, close }: CreateProposalModalProps) => {
         setUploadStatus("File uploaded successfully!");
         const ipfsLink = await pinata.gateways.public.convert(upload.cid);
         setLink(ipfsLink);
+        const record = "token"; // TODO: replace with token records from token registry for dao token
+        const detail_hash = encodeToFWithQuotient(upload.cid);
+        await createProposal(
+          currentOrganization!,
+          // BigInt(proposalDetails.organizationId),
+          Number(proposalDetails.blockHeight),
+          detail_hash,
+          record
+        );
       } else {
         setUploadStatus("Upload failed");
       }

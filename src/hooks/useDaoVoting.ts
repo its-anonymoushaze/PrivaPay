@@ -12,24 +12,24 @@ import { toast } from 'sonner';
 
 export const ALEO_ZERO_ADDRESS = 'aleo1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq3ljyzc';
 
-export const useCompanyRegister = () => {
+export const useDaoVoting = () => {
 
     const { publicKey, connected, requestTransaction } = useWallet();
     const { addTxns } = useAleoTransaction();
     const { program } = useAleoContract()
 
-    const createProposal = useCallback(async (company_id: bigint, time_limit: number, detail_hash: bigint, token_record: any) => {
+    const createProposal = useCallback(async (company_id: bigint, time_limit: number, detail_hash: bigint[], token_record: any) => {
         try {
             if (connected && Boolean(publicKey)) {
                 const proposal_id_raw = await program(VITE_DAO_CONTRACT_NAME).map("latest_proposal_id").get("true")
-                const proposal_id_parsed = parseJSONLikeString(proposal_id_raw)
+                const proposal_id_parsed = parseJSONLikeString(proposal_id_raw || "0u32")
                 const proposal_id = leo2js.u32(proposal_id_parsed) + 1
                 const fee_microcredits = 650_000;
                 const inputs = [
                     js2leo.u32(proposal_id),
                     js2leo.field(company_id),
                     js2leo.u32(time_limit),
-                    js2leo.field(detail_hash),
+                    `[${detail_hash.map((hash) => js2leo.field(hash)).join(',')}]`,
                     token_record
                 ];
                 const transction = Transaction.createTransaction(

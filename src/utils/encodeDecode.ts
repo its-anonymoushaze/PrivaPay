@@ -52,7 +52,7 @@ export function encodeToFWithQuotient(input: string) {
     const remainder = m % Fp;
     const quotient = m / Fp;
 
-    return { remainder, quotient };
+    return [remainder, quotient];
 }
 
 export function decodeFromFWithQuotient(remainder: bigint, quotient: bigint) {
@@ -69,6 +69,8 @@ export function decodeFromFWithQuotient(remainder: bigint, quotient: bigint) {
     const utf8Decoder = new TextDecoder();
     return utf8Decoder.decode(new Uint8Array(bytes));
 }
+
+// console.log("Decoded:", decodeFromFWithQuotient(7220411004683952651890112249107978974372807758430990984310826975359873668882n, 549442230259753788161137620432582591662853501147703271594142534224n))
 
 // console.log("Encoded with quotient:", encodeToFWithQuotient("b45165ed3cd437b9ffad02a2aad22a4ddc69162470e2622982889ce5826f6e3d"));
 // console.log("Decoded with quotient:", decodeFromFWithQuotient(encodeToFWithQuotient("b45165ed3cd437b9ffad02a2aad22a4ddc69162470e2622982889ce5826f6e3d").remainder, encodeToFWithQuotient("b45165ed3cd437b9ffad02a2aad22a4ddc69162470e2622982889ce5826f6e3d").quotient));
