@@ -77,7 +77,8 @@ const UserOrganizationTable = () => {
             {convertTokenAmountToDisplay(
               leo2js.u128(row.original.record.data.amount),
               vUSDCDecimal
-            )}
+            )}{" "}
+            USDC
           </div>
         );
       },
@@ -91,7 +92,8 @@ const UserOrganizationTable = () => {
             {convertTokenAmountToDisplay(
               leo2js.u128(row.original.total_claimed_amount),
               vUSDCDecimal
-            )}
+            )}{" "}
+            USDC
           </div>
         );
       },
@@ -111,7 +113,8 @@ const UserOrganizationTable = () => {
                 row.original.current_height
               ),
               vUSDCDecimal
-            )}
+            )}{" "}
+            USDC
           </div>
         );
       },

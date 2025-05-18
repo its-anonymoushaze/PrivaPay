@@ -41,7 +41,8 @@ const employeeColumns: ColumnDef<any>[] = [
           {convertTokenAmountToDisplay(
             leo2js.u128(row.original.amount),
             vUSDCDecimal
-          )}
+          )}{" "}
+          USDC
         </span>
       );
     },
