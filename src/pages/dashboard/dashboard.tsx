@@ -8,7 +8,9 @@ const Dashboard = () => {
   console.log("isAdmin", isAdmin);
 
   return (
-    <div className="">{isAdmin ? <AdminDashboard /> : <UserDashboard />}</div>
+    <div className="w-full h-full">
+      {isAdmin ? <AdminDashboard /> : <UserDashboard />}
+    </div>
   );
 };
 

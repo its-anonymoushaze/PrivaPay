@@ -1,19 +1,21 @@
+import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
-import { useFetchRecords } from "../hooks/useFetchRecord";
 import {
   VITE_ALEO_BASE_URL,
   VITE_ANS_URL,
   VITE_PRIVAPAY_CONTRACT_NAME,
 } from "../config/env";
-import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
-import { js2leo, leo2js } from "../lib/aleo";
-import { useAleoContract } from "../hooks/useAleoContract";
-import { parseJSONLikeString } from "../utils/parser";
-import { getEmployeeHash } from "../utils/employeeHash";
 import { vUSDCTokenID } from "../config/token";
-import axios from "axios";
+import { useAleoContract } from "../hooks/useAleoContract";
+import { useFetchRecords } from "../hooks/useFetchRecord";
+import { js2leo, leo2js } from "../lib/aleo";
+import { getEmployeeHash } from "../utils/employeeHash";
+import { parseJSONLikeString } from "../utils/parser";
 
 interface RecordContext {
+  isFetching: boolean;
+  setIsFetching: (value: boolean) => void;
   employeeRecords: any;
   companyRecords: any;
   employeeRecordsAdmin: any;
@@ -27,6 +29,7 @@ interface RecordContext {
 }
 
 const initialState: RecordContext = {
+  isFetching: true,
   employeeRecords: [],
   companyRecords: [],
   employeeRecordsAdmin: [],
@@ -37,6 +40,7 @@ const initialState: RecordContext = {
   setCompanyRecords: () => {},
   setEmployeeRecordsAdmin: () => {},
   setIsAdmin: () => {},
+  setIsFetching: () => {},
 };
 
 export const RecordContext = createContext<RecordContext>(initialState);
@@ -55,6 +59,7 @@ export const RecordContextProvider = ({
   const [currentOrganization, setCurrentOrganization] = useState<
     bigint | undefined | null
   >();
+  const [isFetching, setIsFetching] = useState(true);
   const { fetchRecords } = useFetchRecords();
   const { program } = useAleoContract();
   const getCompanyData = async (company_id: any) => {
@@ -196,6 +201,7 @@ export const RecordContextProvider = ({
           }
         }
         console.log({ employeeData });
+        setIsFetching(false);
       } catch (error) {
         console.error("Error fetching records:", error);
       }
@@ -213,9 +219,12 @@ export const RecordContextProvider = ({
       setCurrentOrganization(null);
     }
   }, [connected]);
+
   return (
     <RecordContext.Provider
       value={{
+        isFetching,
+        setIsFetching,
         employeeRecords,
         companyRecords,
         employeeRecordsAdmin,

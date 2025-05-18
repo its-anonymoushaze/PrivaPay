@@ -27,15 +27,27 @@ export default function AppRouter() {
   const privateRoutes = [
     {
       path: "/dashboard",
-      element: isWalletConnected ? <Dashboard /> : <Navigate to="/login" />,
+      element: isWalletConnected ? (
+        <Dashboard />
+      ) : (
+        <Navigate to="/login" replace />
+      ),
     },
     {
       path: "/voting",
-      element: isWalletConnected ? <Voting /> : <Navigate to="/login" />,
+      element: isWalletConnected ? (
+        <Voting />
+      ) : (
+        <Navigate to="/login" replace />
+      ),
     },
     {
       path: "/bridge",
-      element: isWalletConnected ? <Bridge /> : <Navigate to="/login" />,
+      element: isWalletConnected ? (
+        <Bridge />
+      ) : (
+        <Navigate to="/login" replace />
+      ),
     },
   ];
 

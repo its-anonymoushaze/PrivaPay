@@ -36,7 +36,7 @@ export function Table<TData>({
   });
 
   return (
-    <div className="w-[80vw] h-[70vh]">
+    <div className="w-[80vw]">
       {/* Table */}
       <table className="min-w-full divide-y divide-gray-700 border border-gray-800  p-6 rounded-2xl shadow-simple text-white">
         <thead className="">
