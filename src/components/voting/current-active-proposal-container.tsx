@@ -95,9 +95,7 @@ const CurrentActiveProposalContainer = ({
                   Number(proposal.no_hash_count))) *
               100
             }
-            votingPowerAvailable={Number(
-              leo2js.u128(votingRecords[0].data.amount)
-            )}
+            votingPowerAvailable={100}
             onVoteFor={(prop) => handleVote(prop, true)}
             onVoteAgainst={(prop) => handleVote(prop, false)}
           />

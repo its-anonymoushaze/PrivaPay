@@ -38,7 +38,7 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
           <p className=" text-gray-400">{description}</p>
         </div>
 
-        <div className="flex justify-between mb-5 text-sm">
+        <div className="flex justify-between flex-col gap-4 mb-5 text-sm">
           <div>
             <div className="font-semibold">Proposer</div>
             <div>{proposer}</div>
@@ -48,7 +48,7 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
             <div>{status}</div>
           </div>
           <div>
-            <div className="font-semibold">Ends</div>
+            <div className="font-semibold">Ending Height</div>
             <div>{ends}</div>
           </div>
         </div>
@@ -57,11 +57,11 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
       <div className="flex flex-col gap-4 w-full">
         <div className="flex justify-around font-bold mb-5">
           <div className="text-green-600">
-            👍 For
+            For
             <div>{votesFor}</div>
           </div>
           <div className="text-red-600">
-            👎 Against
+            Against
             <div>{votesAgainst}</div>
           </div>
         </div>
@@ -73,17 +73,20 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
               style={{ width: `${voteDistributionPercent}%` }}
             />
           </div>
-          <div className="text-right text-xs">
-            {voteDistributionPercent}% For
+          <div className="text-right text-xs flex gap-6">
+            <span>{voteDistributionPercent || 0}% For</span>
+            <span>{100 - voteDistributionPercent || 0}% Against</span>
           </div>
         </div>
         <div>
           <strong className="block mb-1">Cast Your Vote</strong>
-          <div className="text-xs mb-3">
+          <div className="text-xs mb-3 text-gray-600">
             You have {votingPowerAvailable} voting power available
           </div>
           {proposal.votedByUser ? (
-            "you have already voted"
+            <div className="px-2 py-1 text-sm border border-blue-500 text-blue-500 bg-blue-500/10 rounded-sm text-center w-full">
+              You have already voted
+            </div>
           ) : (
             <div className="flex gap-3">
               <button
@@ -107,40 +110,3 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
 };
 
 export default VoteComponent;
-
-// admin
-// :
-// "aleo1wfaqpfc57m0wxmr9l6r8a5g95c0cthe54shzmcyu6wf6tqvady9syt27xt"
-// company_id
-// :
-// "1field"
-// company_name
-// :
-// "5206530950243041280u128"
-// data
-// :
-// "Title: Leave me alone\nDescription: I want leave"
-// detail_hash
-// :
-// (2) ['5341748004139901813278443370079249265657993891619923866090155842657164456471field', '661159771935999158161296255053641652739378562971529356815231512395field']
-// id
-// :
-// "1u32"
-// no_hash_count
-// :
-// 0n
-// proposer
-// :
-// "aleo19rvznap09ngdjvgjgydyy7g2gt5ga8ky4pj8yxk48600mpdy6g9s7etzvp"
-// status
-// :
-// "0u8"
-// time_limit
-// :
-// "8000000u32"
-// votedByUser
-// :
-// false
-// yes_hash_count
-// :
-// 0n
