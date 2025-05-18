@@ -50,6 +50,6 @@ export const asciiToString = (ascii: bigint): string => {
   return asciiArray.join("");
 };
 
-console.log(stringToAscii("ODAO")); // 448378203247
+// console.log(stringToAscii("O1DAO")); // 448378203247
 // console.log(asciiToString(126207244316550807246864384n)); // hello world
 // console.log(await hashStruct(js2leo.json(374363288885082032439296n)))
