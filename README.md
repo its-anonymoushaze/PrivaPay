@@ -1,6 +1,6 @@
 # PrivaPay - Private, Programmable Payroll on Aleo Blockchain
 
-![PrivaPay Logo](./assets/privapay-logo.png)
+![PrivaPay Logo](./src/assets/illustrations/PrivaPay.svg)
 
 ## 🔒 Overview
 
