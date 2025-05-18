@@ -9,6 +9,7 @@ import { useAleoContract } from "../hooks/useAleoContract";
 import { parseJSONLikeString } from "../utils/parser";
 import { pinata } from "../utils/pinata";
 import { decodeFromFWithQuotient } from "../utils/encodeDecode";
+import { hashStruct } from "../utils/hasher";
 
 interface ProposalContext {
   proposalList: any[];
@@ -39,6 +40,42 @@ export const ProposalContextProvider = ({
     return parsedCompanyData as any;
   };
 
+  const getProposalVoteStatus = async (proposalId: number) => {
+    const vote = await hashStruct({
+      proposal_id: js2leo.u32(proposalId),
+      voter: js2leo.address(publicKey!),
+    });
+    const yes_hash = await hashStruct({
+      id: js2leo.u32(proposalId),
+      acceptance: js2leo.boolean(true),
+    });
+    const no_hash = await hashStruct({
+      id: js2leo.u32(proposalId),
+      acceptance: js2leo.boolean(false),
+    });
+
+    const votedByUserRaw = await program(VITE_DAO_CONTRACT_NAME)
+      .map("is_voted")
+      .get(vote);
+    const parsedVotedByUser = parseJSONLikeString(votedByUserRaw || "false");
+    const votedByUser = leo2js.boolean(parsedVotedByUser);
+    const yes_hashRaw = await program(VITE_DAO_CONTRACT_NAME)
+      .map("votes")
+      .get(yes_hash);
+    const parsedYesHash = parseJSONLikeString(yes_hashRaw || "0u128");
+    const yes_hash_count = leo2js.u128(parsedYesHash);
+    const no_hashRaw = await program(VITE_DAO_CONTRACT_NAME)
+      .map("votes")
+      .get(no_hash);
+    const parsedNoHash = parseJSONLikeString(no_hashRaw || "0u128");
+    const no_hash_count = leo2js.u128(parsedNoHash);
+    return {
+      votedByUser,
+      yes_hash_count,
+      no_hash_count,
+    };
+  };
+
   useEffect(() => {
     const fetchProposals = async () => {
       const latestProposalId = await program(VITE_DAO_CONTRACT_NAME)
@@ -47,13 +84,14 @@ export const ProposalContextProvider = ({
       const proposals: any[] = [];
       const parsedProposalId = parseJSONLikeString(latestProposalId || "0u32");
       const proposalId = leo2js.u32(parsedProposalId);
-      for (let i = 2; i <= proposalId; i++) {
+      for (let i = 1; i <= proposalId; i++) {
         const proposal = await program(VITE_DAO_CONTRACT_NAME)
           .map("proposals")
           .get(js2leo.u32(i));
         const proposalStatus = await program(VITE_DAO_CONTRACT_NAME)
           .map("proposal_status")
           .get(js2leo.u32(i));
+        const votesStatus = await getProposalVoteStatus(i);
         const parsedProposalStatus = parseJSONLikeString(proposalStatus);
         const parsedProposal: any = parseJSONLikeString(proposal);
         const companyData = await getCompanyData(parsedProposal.company_id);
@@ -67,6 +105,7 @@ export const ProposalContextProvider = ({
 
         proposals.push({
           data: data as string,
+          ...votesStatus,
           ...parsedProposal,
           ...companyData,
           status: parsedProposalStatus,
