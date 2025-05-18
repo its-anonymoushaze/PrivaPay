@@ -1,11 +1,10 @@
-import React from "react";
 import {
-  useReactTable,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  useReactTable,
   type ColumnDef,
-  flexRender,
 } from "@tanstack/react-table";
 
 interface TableProps<TData> {
