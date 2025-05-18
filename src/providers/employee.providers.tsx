@@ -1,5 +1,4 @@
 import React, { createContext } from "react";
-import useRecordProvider from "./record.providers";
 
 interface EmployeeContext {}
 
@@ -12,8 +11,6 @@ export const EmployeeContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { employeeRecords } = useRecordProvider();
-
   return <RecordContext.Provider value={{}}>{children}</RecordContext.Provider>;
 };
 
