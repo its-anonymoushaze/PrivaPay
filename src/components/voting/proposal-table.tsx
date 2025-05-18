@@ -7,6 +7,7 @@ import { withdrawableAmountCalculator } from "../../utils/withdrawableAmount";
 import { Table } from "../table.component";
 import WithdrawModal from "../user/withdraw-modal";
 import useProposalProvider from "../../providers/proposal.providers";
+import { truncate } from "../../utils/formatAddress";
 
 const ProposalTable = () => {
   const { proposalList } = useProposalProvider();
@@ -44,8 +45,15 @@ const ProposalTable = () => {
       },
     },
     {
+      accessorKey: "data.title",
+      header: "Proposal Title",
+      cell: ({ row }) => {
+        return <div className="flex gap-2">{row.original.data}</div>;
+      },
+    },
+    {
       accessorKey: "data.time_limit",
-      header: "Valid Block Height",
+      header: "Valid Till Block Height",
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
@@ -55,12 +63,37 @@ const ProposalTable = () => {
       },
     },
     {
+      accessorKey: "data.status",
+      header: "Status",
+      cell: ({ row }) => {
+        return (
+          <div className="flex gap-2">
+            {leo2js.u8(row.original.status) === 0 ? "Active" : "Inactive"}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "data.yes_hash_count",
+      header: "Votes For",
+      cell: ({ row }) => {
+        return <div className="flex gap-2">{row.original.yes_hash_count}</div>;
+      },
+    },
+    {
+      accessorKey: "data.no_hash_count",
+      header: "Votes Against",
+      cell: ({ row }) => {
+        return <div className="flex gap-2">{row.original.no_hash_count}</div>;
+      },
+    },
+    {
       accessorKey: "data.proposer",
       header: "Proposer",
       cell: ({ row }) => {
         return (
           <div className="flex gap-2">
-            {leo2js.address(row.original.proposer)}
+            {truncate(leo2js.address(row.original.proposer))}
           </div>
         );
       },
