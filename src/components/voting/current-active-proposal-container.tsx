@@ -51,22 +51,28 @@ const CurrentActiveProposalContainer = ({
           </button>
         </div>
       </div>
-      {currentPackets.map((packet) => (
-        <VoteComponent
-          key={packet.id}
-          title={packet.title}
-          description={packet.description}
-          proposer={packet.proposer}
-          status={packet.status}
-          ends={packet.ends}
-          votesFor={packet.votesFor}
-          votesAgainst={packet.votesAgainst}
-          voteDistributionPercent={packet.voteDistributionPercent}
-          votingPowerAvailable={packet.votingPowerAvailable}
-          onVoteFor={() => alert("Voted For")}
-          onVoteAgainst={() => alert("Voted Against")}
-        />
-      ))}
+      {currentPackets.length === 0 ? (
+        <div className="flex w-full text-gray-600 text-center">
+          No Active Proposals
+        </div>
+      ) : (
+        currentPackets.map((packet) => (
+          <VoteComponent
+            key={packet.id}
+            title={packet.title}
+            description={packet.description}
+            proposer={packet.proposer}
+            status={packet.status}
+            ends={packet.ends}
+            votesFor={packet.votesFor}
+            votesAgainst={packet.votesAgainst}
+            voteDistributionPercent={packet.voteDistributionPercent}
+            votingPowerAvailable={packet.votingPowerAvailable}
+            onVoteFor={() => alert("Voted For")}
+            onVoteAgainst={() => alert("Voted Against")}
+          />
+        ))
+      )}
     </div>
   );
 };
