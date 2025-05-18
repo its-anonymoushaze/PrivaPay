@@ -102,13 +102,6 @@ PrivaPay connects to the Aleo blockchain using the official Aleo SDK. The applic
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📧 Contact
-
-For questions or support, please contact:
-- Email: support@privapay.com
-- Twitter: [@PrivaPay](https://twitter.com/PrivaPay)
-- Discord: [PrivaPay Community](https://discord.gg/privapay)
-
 ## 🙏 Acknowledgements
 
 - [Aleo](https://aleo.org/) - For their revolutionary privacy-preserving blockchain technology
