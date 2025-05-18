@@ -6,7 +6,7 @@ const CTA = () => {
           Ready to Transform your <br />
           <br />
           <span className="text-6xl">
-            <span className="text-white">Payroll</span> with{" "}
+            <span className="text-white">Organization</span> with{" "}
             <span className="italic">Privacy</span>?
           </span>
         </h2>

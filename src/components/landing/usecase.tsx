@@ -1,4 +1,4 @@
-import { BadgeDollarSign, Globe, Handshake } from "lucide-react";
+import { BadgeDollarSign, Globe, Handshake, Vote } from "lucide-react";
 import { PrivaPay } from "../../assets/illustrations";
 
 const globalCompFeatures = [
@@ -23,18 +23,25 @@ const globalCompFeatures = [
     icon: <BadgeDollarSign size={32} />,
     position: "top-1/2 left-0 -translate-y-1/2",
   },
+  {
+    title: "Proposals",
+    description:
+      "Confidentially submit and vote on proposals without revealing identities.",
+    icon: <Vote size={32} />,
+    position: "top-0 left-1/2 -translate-x-1/2",
+  },
 ];
 
 const Usecase = () => {
   return (
-    <section className="py-12 px-4 w-[80vw] mx-auto h-[600px] my-8">
+    <section className="py-12 px-4 w-[80vw] mx-auto h-[800px] my-8">
       <h2 className="text-3xl font-mono font-bold text-white mb-10 w-full text-center">
         Use Cases
       </h2>
 
       <div className="relative w-full  gap-8 flex justify-center items-center text-white h-full">
         {/* Center logo */}
-        <div className="absolute z-10 mb-60">
+        <div className="absolute z-10 mb-16">
           <img src={PrivaPay} className="w-32 h-32 text-orange-500" />
         </div>
 
