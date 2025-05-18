@@ -19,7 +19,7 @@ const Sidebar = () => {
       label: "DAO Voting",
       link: "/voting",
     },
-    { icon: ArrowLeftRight, label: "bridge", link: "/bridge" },
+    { icon: ArrowLeftRight, label: "Bridge", link: "/bridge" },
   ];
 
   return (
