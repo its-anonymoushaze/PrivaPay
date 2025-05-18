@@ -53,7 +53,7 @@ const Sidebar = () => {
         }}
       >
         <ArrowLeftRight size={16} />
-        Switch to {isAdmin ? "User" : "Admin"} View
+        Switch to {isAdmin ? "User" : "Admin"} view
       </button>
     </div>
   );
