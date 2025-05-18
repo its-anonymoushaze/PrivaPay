@@ -5,16 +5,34 @@ import VoteComponent from "../components/voting/voting-card";
 import ProposalTable from "../components/voting/proposal-table";
 import { pinata } from "../utils/pinata";
 import useProposalProvider from "../providers/proposal.providers";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Voting = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const { proposalList } = useProposalProvider();
+
+  const [currentActiveShown, setCurrentActiveShown] = React.useState();
 
   const currentActiveProposal = useMemo(() => {
     return proposalList.filter((proposal) => {
       return proposal.status === "0u8";
     });
   }, [proposalList]);
+
+  const handleClickRight = () => {
+    if (currentActiveShown === undefined) {
+      setCurrentActiveShown(currentActiveProposal[0]);
+    } else if (currentActiveShown < currentActiveProposal.length - 1) {
+      setCurrentActiveShown(currentActiveProposal[currentActiveShown + 1]);
+    }
+  };
+  const handleClickLeft = () => {
+    if (currentActiveShown === undefined) {
+      setCurrentActiveShown(currentActiveProposal[0]);
+    } else if (currentActiveShown > 0) {
+      setCurrentActiveShown(currentActiveProposal[currentActiveShown - 1]);
+    }
+  };
 
   console.log("Current Active Proposal", currentActiveProposal);
 
@@ -38,7 +56,27 @@ const Voting = () => {
     <AdminLayout>
       <div className="space-y-10 p-8">
         <div className="flex flex-col gap-4">
-          <div className="text-xl font-semibold">Current Active Proposal</div>
+          <div className="flex justify-between w-full">
+            <div className="text-xl font-semibold">Current Active Proposal</div>
+            <div className="flex gap-1">
+              <button
+                onClick={handleClickLeft}
+                disabled={currentActiveShown === 0}
+                className=" px-4 h-fit py-2 rounded cursor-pointer disabled:opacity-40"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={handleClickRight}
+                disabled={
+                  currentActiveShown === currentActiveProposal.length - 1
+                }
+                className=" px-4 h-fit py-2 rounded cursor-pointer disabled:opacity-40"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
           <VoteComponent
             title="Increase Developer Fund by 5%"
             description="Allocate an additional 5% of treasury to the developer grants program to accelerate platform development."
