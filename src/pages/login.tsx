@@ -1,18 +1,26 @@
-import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
-import { CatAstro } from "../assets/illustrations";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import { WalletMultiButton } from "@demox-labs/aleo-wallet-adapter-reactui";
 import { useEffect } from "react";
-import { useRouter } from "../routes/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CatAstro } from "../assets/illustrations";
+import Loader from "../components/loader.component";
 
 const Login = () => {
-  const { connected } = useWallet();
-  const { push } = useRouter();
+  const { connected, connecting } = useWallet();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from || "/dashboard";
 
   useEffect(() => {
     if (connected) {
-      push("/dashboard");
+      navigate(from, { replace: true });
     }
-  }, [connected]);
+  }, [connected, from, navigate]);
+
+  if (connecting) {
+    return <Loader />;
+  }
   return (
     <div className="flex items-center justify-center gap-16 w-screen h-screen">
       <div>
