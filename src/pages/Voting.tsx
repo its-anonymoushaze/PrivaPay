@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import CreateProposalModal from "../components/voting/create-proposal-modal";
 import CurrentActiveProposalContainer from "../components/voting/current-active-proposal-container";
 import ProposalTable from "../components/voting/proposal-table";
 import AdminLayout from "../layouts/AdminLayout";
 import useProposalProvider from "../providers/proposal.providers";
-import { pinata } from "../utils/pinata";
 
 const Voting = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);

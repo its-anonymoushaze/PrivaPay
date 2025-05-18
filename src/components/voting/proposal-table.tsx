@@ -1,29 +1,13 @@
 import { type ColumnDef } from "@tanstack/react-table";
 
-import { useState } from "react";
 import { leo2js } from "../../lib/aleo";
-import { asciiToString } from "../../utils/stringToAscii";
-import { withdrawableAmountCalculator } from "../../utils/withdrawableAmount";
-import { Table } from "../table.component";
-import WithdrawModal from "../user/withdraw-modal";
 import useProposalProvider from "../../providers/proposal.providers";
 import { truncate } from "../../utils/formatAddress";
+import { asciiToString } from "../../utils/stringToAscii";
+import { Table } from "../table.component";
 
 const ProposalTable = () => {
   const { proposalList } = useProposalProvider();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [selectedRecord, setSelectedRecord] = useState(null);
-
-  const openModal = (record: any) => {
-    setSelectedRecord(record);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedRecord(null);
-  };
 
   const transactionColumns: ColumnDef<any>[] = [
     {
@@ -110,11 +94,6 @@ const ProposalTable = () => {
         totalPages={1}
         error={proposalList.length === 0 ? "No proposals found" : undefined}
         currentPage={1}
-      />
-      <WithdrawModal
-        open={isModalOpen}
-        close={closeModal}
-        record={selectedRecord}
       />
     </>
   );
