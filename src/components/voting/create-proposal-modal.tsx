@@ -26,17 +26,24 @@ const CreateProposalModal = ({ open, close }: CreateProposalModalProps) => {
 
   const { createProposal } = useDaoVoting();
 
-  const { companyRecords, currentOrganization } = useRecordProvider();
+  const { companyList, currentOrganization, votingRecords } =
+    useRecordProvider();
 
   const [uploadStatus, setUploadStatus] = useState("");
   const [link, setLink] = useState("");
 
   const handleAddProposal = async () => {
     try {
-      const textContent = `Title: ${proposalDetails.title}\nDescription: ${proposalDetails.description}`;
+      const textContent = {
+        title: proposalDetails.title,
+        description: proposalDetails.description,
+      };
+      const textContentStringified = JSON.stringify(textContent);
 
       // Create a Blob object with the text content
-      const textBlob = new Blob([textContent], { type: "text/plain" });
+      const textBlob = new Blob([textContentStringified], {
+        type: "text/plain",
+      });
       const file = new File([textBlob], "formData.txt", {
         type: "text/plain",
       });
@@ -51,14 +58,13 @@ const CreateProposalModal = ({ open, close }: CreateProposalModalProps) => {
         setUploadStatus("File uploaded successfully!");
         const ipfsLink = await pinata.gateways.public.convert(upload.cid);
         setLink(ipfsLink);
-        const record = "token"; // TODO: replace with token records from token registry for dao token
         const detail_hash = encodeToFWithQuotient(upload.cid);
         await createProposal(
           currentOrganization!,
           // BigInt(proposalDetails.organizationId),
           Number(proposalDetails.blockHeight),
           detail_hash,
-          record
+          votingRecords[0]
         );
       } else {
         setUploadStatus("Upload failed");
@@ -87,7 +93,7 @@ const CreateProposalModal = ({ open, close }: CreateProposalModalProps) => {
               organizationId: e.value,
             });
           }}
-          options={companyRecords.map((company: any) => ({
+          options={companyList.map((company: any) => ({
             label: asciiToString(leo2js.u128(company.company_name)),
             value: leo2js.field(company.company_id),
           }))}

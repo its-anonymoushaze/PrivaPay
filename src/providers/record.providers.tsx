@@ -3,20 +3,26 @@ import { useFetchRecords } from "../hooks/useFetchRecord";
 import {
   VITE_ALEO_BASE_URL,
   VITE_ANS_URL,
+  VITE_DAO_CONTRACT_NAME,
   VITE_PRIVAPAY_CONTRACT_NAME,
+  VITE_TOKEN_REGISTRY_CONTRACT_NAME,
 } from "../config/env";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { js2leo, leo2js } from "../lib/aleo";
 import { useAleoContract } from "../hooks/useAleoContract";
 import { parseJSONLikeString } from "../utils/parser";
 import { getEmployeeHash } from "../utils/employeeHash";
-import { vUSDCTokenID } from "../config/token";
+import { DAOTokenID, vUSDCTokenID } from "../config/token";
 import axios from "axios";
 
 interface RecordContext {
   employeeRecords: any;
   companyRecords: any;
   employeeRecordsAdmin: any;
+  votingRecords: any;
+  companyList: any;
+  setCompanyList: (value: any) => void;
+  setVotingRecords: (value: any) => void;
   isAdmin: boolean;
   currentOrganization: bigint | null | undefined;
   setCurrentOrganization: (value: bigint | null | undefined) => void;
@@ -30,6 +36,10 @@ const initialState: RecordContext = {
   employeeRecords: [],
   companyRecords: [],
   employeeRecordsAdmin: [],
+  votingRecords: [],
+  companyList: [],
+  setCompanyList: () => {},
+  setVotingRecords: () => {},
   isAdmin: false,
   currentOrganization: null,
   setCurrentOrganization: () => {},
@@ -49,9 +59,10 @@ export const RecordContextProvider = ({
   const { publicKey, connected } = useWallet();
   const [employeeRecords, setEmployeeRecords] = useState<any[]>([]);
   const [companyRecords, setCompanyRecords] = useState<any[]>([]);
+  const [companyList, setCompanyList] = useState<any[]>([]);
   const [employeeRecordsAdmin, setEmployeeRecordsAdmin] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [employeeData, setEmployeeData] = useState<any[]>([]);
+  const [votingRecords, setVotingRecords] = useState<any[]>([]);
   const [currentOrganization, setCurrentOrganization] = useState<
     bigint | undefined | null
   >();
@@ -152,6 +163,10 @@ export const RecordContextProvider = ({
             const parsedCompanyData = await getCompanyData(
               record.data.company_id
             );
+            setCompanyList((prev) => [
+              ...prev,
+              { ...record.data, company_name: parsedCompanyData.company_name },
+            ]);
             setCompanyRecords((prev) => [
               ...prev,
               { ...record.data, company_name: parsedCompanyData.company_name },
@@ -162,14 +177,9 @@ export const RecordContextProvider = ({
             const parsedCompanyData = await getCompanyData(
               record.data.company_id
             );
-            setEmployeeData((prev) => [
+            setCompanyList((prev) => [
               ...prev,
-              {
-                ...record.data,
-                last_claim: parsedEmployeeData.last_claimed,
-                current_height: latest_height,
-                total_claimed_amount: parsedEmployeeData.total_claimed_amount,
-              },
+              { ...record.data, company_name: parsedCompanyData.company_name },
             ]);
             setEmployeeRecords((prev) => [
               ...prev,
@@ -182,6 +192,7 @@ export const RecordContextProvider = ({
                 employeeName: parsedEmployeeData.employeeName,
               },
             ]);
+            setCurrentOrganization(leo2js.field(record?.data?.company_id));
           } else if (recordType == 2) {
             const parsedEmployeeData = await getEmployeeData(record);
             setEmployeeRecordsAdmin((prev) => [
@@ -195,7 +206,6 @@ export const RecordContextProvider = ({
             //   setEmployeeRecordsAdmin((prev) => [...prev, record]);
           }
         }
-        console.log({ employeeData });
       } catch (error) {
         console.error("Error fetching records:", error);
       }
@@ -204,11 +214,32 @@ export const RecordContextProvider = ({
   }, [publicKey]);
 
   useEffect(() => {
+    const fetchVotingRecords = async () => {
+      try {
+        const records = await fetchRecords(VITE_TOKEN_REGISTRY_CONTRACT_NAME);
+        const filteredRecords: any[] = [];
+        for (const record of records) {
+          if (record.spent) continue;
+          const recordData = record.data;
+          const token_id = leo2js.field(recordData.token_id);
+          if (token_id == DAOTokenID) {
+            filteredRecords.push(record);
+          }
+        }
+        console.log("Fetched voting power records:", filteredRecords);
+        setVotingRecords(filteredRecords);
+      } catch (error) {
+        console.error("Error fetching voting records:", error);
+      }
+    };
+    fetchVotingRecords();
+  }, [publicKey]);
+
+  useEffect(() => {
     if (!connected) {
       setEmployeeRecords([]);
       setCompanyRecords([]);
       setEmployeeRecordsAdmin([]);
-      setEmployeeData([]);
       setIsAdmin(false);
       setCurrentOrganization(null);
     }
@@ -220,7 +251,11 @@ export const RecordContextProvider = ({
         companyRecords,
         employeeRecordsAdmin,
         isAdmin,
+        companyList,
+        setCompanyList,
         currentOrganization,
+        votingRecords,
+        setVotingRecords,
         setCurrentOrganization,
         setIsAdmin,
         setEmployeeRecords,

@@ -5,5 +5,6 @@ export const {
     VITE_GATEWAY_URL,
     VITE_JWT_SECRET,
     VITE_DAO_CONTRACT_NAME,
-    VITE_ANS_URL
+    VITE_ANS_URL,
+    VITE_TOKEN_REGISTRY_CONTRACT_NAME
 } = import.meta.env;

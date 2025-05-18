@@ -1,12 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import AdminLayout from "../layouts/AdminLayout";
 import CreateProposalModal from "../components/voting/create-proposal-modal";
 import VoteComponent from "../components/voting/voting-card";
 import ProposalTable from "../components/voting/proposal-table";
 import { pinata } from "../utils/pinata";
+import useProposalProvider from "../providers/proposal.providers";
 
 const Voting = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const { proposalList } = useProposalProvider();
+
+  const currentActiveProposal = useMemo(() => {
+    return proposalList.filter((proposal) => {
+      return proposal.status === "0u8";
+    });
+  }, [proposalList]);
+
+  console.log("Current Active Proposal", currentActiveProposal);
 
   useEffect(() => {
     const fetchData = async () => {

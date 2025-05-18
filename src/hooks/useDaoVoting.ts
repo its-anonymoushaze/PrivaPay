@@ -9,6 +9,18 @@ import { useAleoContract } from './useAleoContract';
 import { parseJSONLikeString } from '../utils/parser';
 import { toast } from 'sonner';
 
+// {
+//     "id": "1u32",
+//     "company_id": "1field",
+//     "time_limit": "8000000u32",
+//     "detail_hash": [
+//         "5341748004139901813278443370079249265657993891619923866090155842657164456471field",
+//         "661159771935999158161296255053641652739378562971529356815231512395field"
+//     ],
+//     "proposer": "aleo19rvznap09ngdjvgjgydyy7g2gt5ga8ky4pj8yxk48600mpdy6g9s7etzvp",
+//     "company_name": "5206530950243041280u128",
+//     "admin": "aleo1wfaqpfc57m0wxmr9l6r8a5g95c0cthe54shzmcyu6wf6tqvady9syt27xt"
+// }
 
 export const ALEO_ZERO_ADDRESS = 'aleo1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq3ljyzc';
 
@@ -17,6 +29,25 @@ export const useDaoVoting = () => {
     const { publicKey, connected, requestTransaction } = useWallet();
     const { addTxns } = useAleoTransaction();
     const { program } = useAleoContract()
+    // const { fetchRecords } = useFetchRecords();
+
+
+    // const getTokenRecord = useCallback(async () => {
+    //     try {
+    //         if (connected && Boolean(publicKey)) {
+    //             const records = await fetchRecords(VITE_DAO_CONTRACT_NAME);
+    //             const token_record_raw = await program(VITE_DAO_CONTRACT_NAME).map("token_record").get("true")
+    //             const token_record_parsed = parseJSONLikeString(token_record_raw || "0u32")
+    //             const token_record = leo2js.u32(token_record_parsed)
+    //             return token_record
+    //         } else {
+    //             console.error('Wallet not connected or public key not available');
+    //         }
+    //     } catch (errors: any) {
+    //         console.error('Error in creating proposal:', errors);
+    //     }
+    // }
+    //     , []);
 
     const createProposal = useCallback(async (company_id: bigint, time_limit: number, detail_hash: bigint[], token_record: any) => {
         try {
